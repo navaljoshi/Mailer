@@ -7,17 +7,30 @@ package com.example.naval.mailer;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
+import static com.example.naval.mailer.Config.EMAIL;
 
 /**
  * Created by Belal on 10/30/2015.
@@ -63,6 +76,22 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
         Toast.makeText(context,"Message Sent",Toast.LENGTH_LONG).show();
     }
 
+
+    public void addAtachments(String attachments, Multipart multipart)
+            throws MessagingException, AddressException {
+        // for (int i = 0; i <= attachments.length - 1; i++) {
+        String filename = attachments;
+        MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+        //use a JAF FileDataSource as it does MIME type detection
+        DataSource source = new FileDataSource(filename);
+        Log.d("LVMH","file path :"+attachments);
+        attachmentBodyPart.setDataHandler(new DataHandler(source));
+        attachmentBodyPart.setFileName(filename);
+        //add the attachment
+        multipart.addBodyPart(attachmentBodyPart);
+
+    }
+
     @Override
     protected Void doInBackground(Void... params) {
         //Creating properties
@@ -70,40 +99,61 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
 
         //Configuring properties for gmail
         //If you are not using gmail you may need to change the values
-        props.put("mail.smtp.host", "smtp.gmail.com");
+         String HOST_NAME = "gmail-smtp.l.google.com";
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", HOST_NAME);
+        props.put("mail.smtp.auth", "true");
+
+      /*  props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.port", "465");*/
 
         //Creating a new session
         session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
                     //Authenticating the password
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(Config.EMAIL, Config.PASSWORD);
+                        return new PasswordAuthentication(EMAIL, Config.PASSWORD);
                     }
                 });
 
-        try {
-            //Creating MimeMessage object
-            MimeMessage mm = new MimeMessage(session);
+        try{
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(EMAIL));
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress("navaljosh@gmail.com"));
+            message.setSubject("Message Alert");
 
-            //Setting sender address
-            mm.setFrom(new InternetAddress(Config.EMAIL));
-            //Adding receiver
-            mm.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
-            //Adding subject
-            mm.setSubject(subject);
-            //Adding message
-            mm.setText(message);
+            //3) create MimeBodyPart object and set your message text
+            BodyPart messageBodyPart1 = new MimeBodyPart();
+            messageBodyPart1.setText("This is message body");
 
-            //Sending email
-            Transport.send(mm);
+            //4) create new MimeBodyPart object and set DataHandler object to this object
+            MimeBodyPart messageBodyPart2 = new MimeBodyPart();
 
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+            String filename =Environment.getExternalStorageDirectory().getAbsolutePath()+"/nikalodean/2nik.jpg";//change accordingly
+            DataSource source = new FileDataSource(filename);
+            messageBodyPart2.setDataHandler(new DataHandler(source));
+            messageBodyPart2.setFileName(filename);
+
+
+            //5) create Multipart object and add MimeBodyPart objects to this object
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart1);
+            multipart.addBodyPart(messageBodyPart2);
+
+            //6) set the multiplart object to the message object
+            message.setContent(multipart );
+
+            //7) send message
+            Transport.send(message);
+
+            System.out.println("message sent....");
+        }catch (MessagingException ex) {ex.printStackTrace();}
+   return null;
 }
+
+}
+
