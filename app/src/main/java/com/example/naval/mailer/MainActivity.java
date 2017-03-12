@@ -2,6 +2,7 @@ package com.example.naval.mailer;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,29 +34,22 @@ public class MainActivity extends AppCompatActivity  {
     private EditText editTextSubject;
     private EditText editTextMessage;
 
-    //Send button
-    private Button buttonSend;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //Declarations
 
         //buttons
-        final Button shareButton = (Button) findViewById(R.id.button1);
-        final Button mailButton = (Button) findViewById(R.id.button2);
 
 
-        //Image View
-        //final ImageView img = (ImageView) findViewById(R.id.imageView);
-       // final ImageView img1 = (ImageView) findViewById(R.id.imageView1);
-
-
-        //Initializing the views
-
-       // img1.setVisibility(View.GONE); // intially share image view is GONE
+        final Button shareButton = (Button) findViewById(R.id.btshr);
+        final Button mailButton = (Button) findViewById(R.id.btGmail);
+        final Button fbButton = (Button) findViewById(R.id.btFacebook);
 
 
         shareButton.setOnClickListener(new View.OnClickListener() {
@@ -66,14 +60,8 @@ public class MainActivity extends AppCompatActivity  {
 
                 Log.d("LVMH", "share button clicked ");
 
-                // changing image view
 
-                // Remove home image View
-              //  img.setVisibility(GONE);
                 shareButton.setVisibility(GONE);
-
-                // Enable share image view
-              //  img1.setVisibility(View.VISIBLE);
 
             }
         });
@@ -92,9 +80,37 @@ public class MainActivity extends AppCompatActivity  {
 
             }
         });
+
+
+        fbButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+
+                Log.d("LVMH", "FB button clicked ");
+
+                callFB();
+
+            }
+        });
     }
 
-    private void sendEmail() {
+
+
+    public void  callFB()
+    {
+        final Dialog dialog1 = new Dialog(this);
+
+        Log.d("LVMH", " opening dialog ");
+        //call FB activity
+        Intent i=new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(i);
+
+    }
+
+
+    public  void sendEmail() {
         final Dialog dialog1 = new Dialog(this);
 
         Log.d("LVMH", " opening dialog ");

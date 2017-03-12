@@ -25,8 +25,10 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.7.0'
     testCompile 'junit:junit:4.12'
     compile files('libs/activation.jar')
     compile files('libs/additionnal.jar')
     compile files('libs/mail.jar')
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }
