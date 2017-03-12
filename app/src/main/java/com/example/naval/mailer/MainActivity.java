@@ -37,8 +37,19 @@ public class MainActivity extends AppCompatActivity  {
     String  newFile =  null;
 
     //Declaring EditText
-    private EditText editTextEmail;
-    private EditText editTextName;
+    public EditText editTextEmail;
+    public EditText editTextName;
+
+    //Declaring Image View
+    public ImageView SharedImg ;
+
+    //buttons
+
+    public Button shareButton ;
+    public Button mailButton ;
+    public Button fbButton ;
+    public LinearLayout gallery  ;
+    public LinearLayout social  ;
 
 
 
@@ -50,17 +61,15 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Declarations
+        // Intializing Components
+        SharedImg = (ImageView)findViewById(R.id.imgShared);
+        shareButton = (Button) findViewById(R.id.btshr);
+        mailButton = (Button) findViewById(R.id.btGmail);
+        fbButton = (Button) findViewById(R.id.btFacebook);
+        gallery  = (LinearLayout) findViewById(R.id.linGal);
+        social  = (LinearLayout) findViewById(R.id.linSocial);
 
-        //buttons
-
-
-        final Button shareButton = (Button) findViewById(R.id.btshr);
-        final Button mailButton = (Button) findViewById(R.id.btGmail);
-        final Button fbButton = (Button) findViewById(R.id.btFacebook);
-        final LinearLayout gallery  = (LinearLayout) findViewById(R.id.linGal);
-         final LinearLayout social  = (LinearLayout) findViewById(R.id.linSocial);
-
+        // Applying Event listners on Buttons
 
         shareButton.setOnClickListener(new View.OnClickListener() {
 
@@ -71,12 +80,7 @@ public class MainActivity extends AppCompatActivity  {
                 Log.d("LVMH", "share button clicked ");
 
 
-                shareButton.setVisibility(GONE);//
-                gallery.setVisibility(GONE); // gallery button disabled
-                social.setVisibility(View.VISIBLE); //social buttons enabled
-                fbButton.setVisibility(View.VISIBLE);
-                mailButton.setVisibility(View.VISIBLE);
-
+                sharingScreen(); // call funtion to clear screen for FB&GMAIL sharing screen
 
             }
         });
@@ -90,8 +94,7 @@ public class MainActivity extends AppCompatActivity  {
 
                 Log.d("LVMH", "MAIL button clicked ");
 
-                sendEmail();
-
+                sendEmail(); //funtion to send EMAIl
 
             }
         });
@@ -105,12 +108,33 @@ public class MainActivity extends AppCompatActivity  {
 
                 Log.d("LVMH", "FB button clicked ");
 
-                callFB();
+                callFB(); // function to FB
 
             }
         });
     }
 
+
+    // fucntion to move from Home - FB&GMAIL sharing screen
+    void sharingScreen()
+    {
+        shareButton.setVisibility(GONE);//
+        gallery.setVisibility(GONE); // gallery button disabled
+        social.setVisibility(View.VISIBLE); //social buttons enabled
+        fbButton.setVisibility(View.VISIBLE);
+        mailButton.setVisibility(View.VISIBLE);
+    }
+    // fucntion to move from sharing screen FB&GMAIL to Shared successfull screen
+    void successSharedScreen() {
+
+
+        social.setVisibility(View.GONE); //social buttons enabled
+        fbButton.setVisibility(View.GONE);
+        mailButton.setVisibility(View.GONE);
+
+        //enable shared iamge picture
+        SharedImg.setVisibility(View.VISIBLE);
+    }
 
 
     public void  callFB()
@@ -166,15 +190,9 @@ public class MainActivity extends AppCompatActivity  {
                 new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
-                        //When you touch outside of dialog bounds,
-                        //the dialog gets canceled and this method executes..
-                        //home();
+
                         dialog1.dismiss();
                         Log.d("LVMH", " cancelled MAIL dialog ");
-
-                        // change view here to final view
-
-
 
                     }
                 }
@@ -206,7 +224,12 @@ public class MainActivity extends AppCompatActivity  {
                 //Executing send mail to send email
                 sm.execute();
 
-                dialog1.dismiss();
+                dialog1.dismiss();// dismiss dialof and remove buttons
+
+
+                successSharedScreen();
+
+
 
 
             }

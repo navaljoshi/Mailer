@@ -123,7 +123,7 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
         try{
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL));
-            message.addRecipient(Message.RecipientType.TO,new InternetAddress("navaljosh@gmail.com"));
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress(email));
             message.setSubject("Message Alert");
 
             //3) create MimeBodyPart object and set your message text
