@@ -1,106 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home"
+    tools:context="com.example.naval.mailer.MainActivity">
+
+    <ImageView
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:scaleType="fitXY"
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="150dp"
+        android:visibility="visible"
+        android:background="@drawable/image_2"
+        android:contentDescription="MainImages"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/linSocial">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/facebook"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/btFacebook"
+            android:visibility="gone" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gmaillogo"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/btGmail"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:id="@+id/linShare"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/share"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/btshr" />
 
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/home"
-        >
-
-        <ImageView
-            android:layout_width="400dp"
-            android:layout_height="400dp"
-            android:scaleType="fitXY"
-            android:layout_centerHorizontal="true"
-
-            android:layout_marginTop="150dp"
-            android:visibility="visible"
-            android:background="@drawable/image_2"
-            android:contentDescription="MainImages"
-            />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/linSocial">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/gmaillogo"
-                android:layout_marginBottom="20dp"
-                android:id="@+id/btFacebook"
-                android:visibility="gone" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/facebook"
-                android:layout_marginBottom="20dp"
-                android:id="@+id/btGmail"
-                android:visibility="gone" />
+            android:orientation="horizontal"
+            android:id="@+id/linGal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/img1"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:src="@drawable/image_3"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#FF000000"
+                android:layout_margin="10dp"
+                />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/img2"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:src="@drawable/image_4"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#FF000000"
+                android:layout_margin="10dp"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/img3"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:src="@drawable/image_5"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#FF000000"
+                android:layout_margin="10dp"/>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+    </LinearLayout>
 
-            android:id="@+id/linShare"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/share"
-                android:layout_marginBottom="20dp"
-                android:id="@+id/btshr" />
-
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/img1"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    android:src="@drawable/image_3"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="#FF000000"
-                    android:layout_margin="10dp"
-                    />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/img2"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    android:src="@drawable/image_4"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="#FF000000"
-                    android:layout_margin="10dp"/>
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/img3"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    android:src="@drawable/image_5"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="#FF000000"
-                    android:layout_margin="10dp"/>
-
-
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </RelativeLayout>
+</RelativeLayout>
 

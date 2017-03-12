@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.FileObserver;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -17,9 +18,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import java.io.File;
 import java.util.Properties;
 
 import javax.mail.PasswordAuthentication;
@@ -29,10 +33,14 @@ import static android.view.View.GONE;
 
 public class MainActivity extends AppCompatActivity  {
 
+    //variable Declarations
+    String  newFile =  null;
+
     //Declaring EditText
     private EditText editTextEmail;
-    private EditText editTextSubject;
-    private EditText editTextMessage;
+    private EditText editTextName;
+
+
 
 
 
@@ -50,6 +58,8 @@ public class MainActivity extends AppCompatActivity  {
         final Button shareButton = (Button) findViewById(R.id.btshr);
         final Button mailButton = (Button) findViewById(R.id.btGmail);
         final Button fbButton = (Button) findViewById(R.id.btFacebook);
+        final LinearLayout gallery  = (LinearLayout) findViewById(R.id.linGal);
+         final LinearLayout social  = (LinearLayout) findViewById(R.id.linSocial);
 
 
         shareButton.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +71,12 @@ public class MainActivity extends AppCompatActivity  {
                 Log.d("LVMH", "share button clicked ");
 
 
-                shareButton.setVisibility(GONE);
+                shareButton.setVisibility(GONE);//
+                gallery.setVisibility(GONE); // gallery button disabled
+                social.setVisibility(View.VISIBLE); //social buttons enabled
+                fbButton.setVisibility(View.VISIBLE);
+                mailButton.setVisibility(View.VISIBLE);
+
 
             }
         });
@@ -110,16 +125,42 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
+    // function for file observer
+    public String observer ()
+    {
+
+
+        FileObserver observer = new FileObserver("/storage/emulated/0/nikalodean/") {
+            // set up a file observer to watch this directory on sd card
+
+            @Override
+            public void onEvent(int event, String file) {
+                Log.d("LVMH", "File created [" + "/storage/emulated/0/nikalodean/" + file + "]");
+
+
+                Toast.makeText(getBaseContext(), file + " was saved!", Toast.LENGTH_LONG).show();
+
+                newFile = "/storage/emulated/0/nikalodean/"+file.toString();
+
+            }
+        };
+        observer.startWatching(); //START OBSERVING
+
+        return newFile;
+    }
+
+
+
     public  void sendEmail() {
         final Dialog dialog1 = new Dialog(this);
 
-        Log.d("LVMH", " opening dialog ");
+        Log.d("LVMH", " opening MAIL dialog ");
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog1.setContentView(R.layout.mail_layout);
         dialog1.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
        // dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog1.setCanceledOnTouchOutside(false);
-        dialog1.setCancelable(false);
+        dialog1.setCanceledOnTouchOutside(true);
+        dialog1.setCancelable(true);
 
         dialog1.setOnCancelListener(
                 new DialogInterface.OnCancelListener() {
@@ -128,15 +169,22 @@ public class MainActivity extends AppCompatActivity  {
                         //When you touch outside of dialog bounds,
                         //the dialog gets canceled and this method executes..
                         //home();
+                        dialog1.dismiss();
+                        Log.d("LVMH", " cancelled MAIL dialog ");
+
+                        // change view here to final view
+
+
+
                     }
                 }
         );
 
         //calling mail send button inside popup
         final Button mail = (Button)dialog1.findViewById(R.id.buttonSend);
-        editTextEmail = (EditText) dialog1.findViewById(R.id.editTextEmail);
-        editTextSubject = (EditText) dialog1.findViewById(R.id.editTextSubject);
-        editTextMessage = (EditText) dialog1.findViewById(R.id.editTextMessage);
+        editTextEmail = (EditText) dialog1.findViewById(R.id.editTextMail);
+        editTextName = (EditText) dialog1.findViewById(R.id.editTextName);
+
 
         mail.setOnClickListener(new View.OnClickListener() {
 
@@ -144,19 +192,21 @@ public class MainActivity extends AppCompatActivity  {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
 
-                Log.d("LVMH", "share button clicked ");
+                Log.d("LVMH", "mail button clicked ");
 
-                // changing image view
+                //Changing image view
                 //Getting content for email
                 String email = editTextEmail.getText().toString().trim();
-                String subject = editTextSubject.getText().toString().trim();
-                String message = editTextMessage.getText().toString().trim();
+                String subject = "LVMH";
+                String message = "hello";
 
                 //Creating SendMail object
                 SendMail sm = new SendMail(getWindow().getContext(), email, subject, message);
 
-                //Executing sendmail to send email
+                //Executing send mail to send email
                 sm.execute();
+
+                dialog1.dismiss();
 
 
             }

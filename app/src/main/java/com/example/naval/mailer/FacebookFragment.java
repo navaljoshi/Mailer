@@ -145,7 +145,7 @@ public class FacebookFragment extends Fragment {
                 updateUI();
 
                 Log.d("naval"," onSuccess INSIDE onCreateView");
-                //postPhotoButton.performClick();
+                postPhotoButton.performClick();
 
 
             }
