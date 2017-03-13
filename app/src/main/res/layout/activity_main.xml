@@ -27,10 +27,10 @@
         android:layout_marginTop="200dp"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@drawable/yoyoyo"
         android:contentDescription="MainImages"
-        />
+        android:id="@+id/imgHome" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -117,12 +117,13 @@
 </RelativeLayout>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textAlignment="center"
         android:background="@drawable/shared"
         android:visibility="gone"
         android:id="@+id/imgShared"
-        android:alpha="50"/>
+        android:alpha="100"/>
 
 </FrameLayout>
 
