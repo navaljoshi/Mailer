@@ -67,6 +67,11 @@ public class MainActivity extends AppCompatActivity  {
     public ImageView thumbnail1  ;
     public ImageView thumbnail2  ;
     public ImageView thumbnail3  ;
+    public Drawable homeDrwable;
+
+    // main path of the selected image
+
+    public String imagePath ; // this will be used by Gmail & FB
 
     FileObserver observer;
 
@@ -221,6 +226,7 @@ public class MainActivity extends AppCompatActivity  {
 
         Log.d("LVMH", " opening dialog ");
         //call FB activity
+
         Intent i=new Intent(MainActivity.this, LoginActivity.class);
         startActivity(i);
 
@@ -230,10 +236,16 @@ public void setDrawableImage(String path)
 {
     String imagePath = Environment.getExternalStorageDirectory().toString()+"/nikalodean/"+path;
     Log.d("LVMH","called getDrawableImage"+ imagePath);
-    Drawable homeDrwable = Drawable.createFromPath(imagePath);
-    home.setImageDrawable(homeDrwable);
-    home.setVisibility(View.VISIBLE);
-    home.refreshDrawableState();
+      homeDrwable = Drawable.createFromPath(imagePath);
+      runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+            home.setImageDrawable(homeDrwable);
+            home.setVisibility(View.VISIBLE);
+            home.invalidate();
+        }
+    });
+
 }
 
 
@@ -247,8 +259,7 @@ public void setDrawableImage(String path)
                 if(event == CREATE)
                 Log.d("LVMH",path);
                 setDrawableImage(path);
-                findViewById(android.R.id.content).invalidate();
-
+                //findViewById(android.R.id.content).invalidate();
 
             }
         };
@@ -266,7 +277,6 @@ public void setDrawableImage(String path)
 
 
             int w = bm1.getWidth();
-
             int h = bm1.getHeight();
 
 

@@ -82,12 +82,17 @@ public class FacebookFragment extends Fragment {
         @Override
         public void onSuccess(Sharer.Result result) {
             Log.d("FacebookFragment", "Success!");
+
             if (result.getPostId() != null) {
                 String title = getString(R.string.success);
+
+               // getView().getParent()
+
                 String id = result.getPostId();
                 String alertMessage = getString(R.string.successfully_posted_post, id);
                // showResult(title, alertMessage);
                 Log.d("naval"," onSuccess");
+                getActivity().finish();//chance vaibhav
             }
         }
 
@@ -127,6 +132,8 @@ public class FacebookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_facebook, parent, false);
         loginButton = (LoginButton) v.findViewById(R.id.loginButton);
+        loginButton.performClick(); // moving stright to FORM login page
+        Log.d("navall"," Indide View ");
         // If using in a fragment
         loginButton.setFragment(this);
         callbackManager = CallbackManager.Factory.create();
