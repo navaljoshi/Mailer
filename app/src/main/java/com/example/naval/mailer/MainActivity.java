@@ -68,10 +68,18 @@ public class MainActivity extends AppCompatActivity  {
     public ImageView thumbnail2  ;
     public ImageView thumbnail3  ;
     public Drawable homeDrwable;
+    public Drawable homeDrwabletemp;
+    public Drawable homeDrwable2;
+    public Drawable homeDrwable3;
 
     // main path of the selected image
 
     public String imagePath ; // this will be used by Gmail & FB
+    public String imagePath1 ;
+    public String imagePath2 ;
+    public int imageCount;
+
+
 
     FileObserver observer;
 
@@ -153,14 +161,38 @@ public class MainActivity extends AppCompatActivity  {
         thumbnail1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Your code.
-                setDrawableImage("2nik.jpg");
+
+                homeDrwabletemp = Drawable.createFromPath(imagePath);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("LVMH", "Set Main Image and thumbnail 1 "+ imagePath );
+                        home.setImageDrawable(homeDrwabletemp);
+                        home.invalidate();
+
+                    }
+                });
+
             }
         });
 
         thumbnail2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Your code.
-                setDrawableImage("3nik.jpg");
+                //setDrawableImage("3nik.jpg");
+                imagePath = imagePath1;
+
+                homeDrwabletemp = Drawable.createFromPath(imagePath1);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("LVMH", "Set Main Image and thumbnail 2 "+ imagePath );
+                        home.setImageDrawable(homeDrwabletemp);
+                        home.invalidate();
+
+                    }
+                });
+
             }
         });
 
@@ -168,7 +200,18 @@ public class MainActivity extends AppCompatActivity  {
         thumbnail3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Your code.
-                setDrawableImage("5nik.jpg");
+                //setDrawableImage("5nik.jpg");
+                imagePath = imagePath2;
+                homeDrwabletemp = Drawable.createFromPath(imagePath2);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("LVMH", "Set Main Image and thumbnail 3"+ imagePath );
+                        home.setImageDrawable(homeDrwabletemp);
+                        home.invalidate();
+
+                    }
+                });
             }
         });
 
@@ -204,7 +247,7 @@ public class MainActivity extends AppCompatActivity  {
         fbButton.setVisibility(View.GONE);
         mailButton.setVisibility(View.GONE);
 
-        //enable shared iamge picture
+        //enable shared image picture
         SharedImg.setVisibility(View.VISIBLE);
         findViewById(android.R.id.content).invalidate();
 
@@ -232,36 +275,85 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
-public void setDrawableImage(String path)
+public void setDrawableImage()
 {
-    String imagePath = Environment.getExternalStorageDirectory().toString()+"/nikalodean/"+path;
-    Log.d("LVMH","called getDrawableImage"+ imagePath);
-      homeDrwable = Drawable.createFromPath(imagePath);
-      runOnUiThread(new Runnable() {
+    Log.d("LVMH", "called getDrawableImage" );
+
+    File file = new File(android.os.Environment.getExternalStorageDirectory(), "Lvmh");
+    imageCount = file.listFiles().length -1  ;
+
+        String imagePath = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount+"img.jpg";
+
+        homeDrwable = Drawable.createFromPath(imagePath);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("LVMH", "Set Main Image and thumbnail " );
+                home.setImageDrawable(homeDrwable);
+                thumbnail1.setImageDrawable(homeDrwable);
+
+                //home.setVisibility(View.VISIBLE);
+                //home.invalidate();
+                //thumbnail1.invalidate();
+
+            }
+        });
+
+    int imageCount1 = imageCount - 1;
+    imagePath1 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount1+"img.jpg";
+
+    homeDrwable2 = Drawable.createFromPath(imagePath1);
+    runOnUiThread(new Runnable() {
         @Override
         public void run() {
-            home.setImageDrawable(homeDrwable);
-            home.setVisibility(View.VISIBLE);
-            home.invalidate();
+            Log.d("LVMH", "Set thumbnail2 " );
+            thumbnail2.setImageDrawable(homeDrwable2);
+            //thumbnail2.invalidate();
+
         }
     });
 
-}
+    int imageCount2 = imageCount - 2;
+     imagePath2 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount2+"img.jpg";
+    homeDrwable3 = Drawable.createFromPath(imagePath2);
+    runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+            Log.d("LVMH", "Set thumbnail3 " );
+            thumbnail3.setImageDrawable(homeDrwable3);
+            //thumbnail3.invalidate();
+
+        }
+    });
+    }
+
 
 
     // function for file observer
     public void observer() {
 
-        FileObserver fobsv = new FileObserver("/storage/emulated/0/nikalodean/") {
+        FileObserver fobsv = new FileObserver("/storage/emulated/0/lvmh/") {
 
             @Override
             public void onEvent(int event, String path) {
-                if(event == CREATE)
-                Log.d("LVMH",path);
-                setDrawableImage(path);
+
+                // On every event we will have a new image in our application
+                // we will only keep 3 , we will make copy of all images for backup and upload on google drive
+                // if we are more or equal then 3 , Sync server will delete , this will happen in loop
+                if(event == CREATE) {
+
+                        Log.d("LVMH -  ", path);
+
+                        setDrawableImage();
+
+                    }
+
+
+                }
+
                 //findViewById(android.R.id.content).invalidate();
 
-            }
+
         };
         fobsv.startWatching();
 

@@ -27,8 +27,8 @@
         android:layout_marginTop="200dp"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
-        android:visibility="gone"
-        android:background="@drawable/yoyoyo"
+        android:visibility="visible"
+        android:background="@drawable/com_facebook_button_login_silver_background"
         android:contentDescription="MainImages"
         android:id="@+id/imgHome" />
 
@@ -80,11 +80,10 @@
             android:id="@+id/linGal">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/img1"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:src="@drawable/image_3"
+                android:src="@drawable/com_facebook_button_login_silver_background"
                 app:civ_border_width="2dp"
                 app:civ_border_color="#FF000000"
                 android:layout_margin="10dp"
@@ -95,7 +94,7 @@
                 android:id="@+id/img2"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:src="@drawable/image_4"
+                android:src="@drawable/com_facebook_button_login_silver_background"
                 app:civ_border_width="2dp"
                 app:civ_border_color="#FF000000"
                 android:layout_margin="10dp"/>
@@ -105,7 +104,7 @@
                 android:id="@+id/img3"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:src="@drawable/image_5"
+                android:src="@drawable/com_facebook_button_login_silver_background"
                 app:civ_border_width="2dp"
                 app:civ_border_color="#FF000000"
                 android:layout_margin="10dp"/>
