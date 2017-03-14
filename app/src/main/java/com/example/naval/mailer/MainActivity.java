@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity  {
 
     // main path of the selected image
 
-    public String imagePath ; // this will be used by Gmail & FB
+    public static  String imagePath ; // this will be used by Gmail & FB
     public String imagePath1 ;
     public String imagePath2 ;
     public int imageCount;
@@ -467,7 +467,7 @@ public void setDrawableImage()
                 //Getting content for email
                 String email = editTextEmail.getText().toString().trim();
                 String subject = "LVMH";
-                String message = "hello";
+                String message = editTextName.getText().toString().trim();
 
                 //Creating SendMail object
                 SendMail sm = new SendMail(getWindow().getContext(), email, subject, message);

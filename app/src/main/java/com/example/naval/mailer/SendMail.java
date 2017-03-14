@@ -124,16 +124,16 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL));
             message.addRecipient(Message.RecipientType.TO,new InternetAddress(email));
-            message.setSubject("Message Alert");
+            message.setSubject("Your Image is here -LVMH");
 
             //3) create MimeBodyPart object and set your message text
             BodyPart messageBodyPart1 = new MimeBodyPart();
-            messageBodyPart1.setText("This is message body");
+            messageBodyPart1.setText("Hello,"+message+",Here is your image from LVMH");
 
             //4) create new MimeBodyPart object and set DataHandler object to this object
             MimeBodyPart messageBodyPart2 = new MimeBodyPart();
 
-            String filename =Environment.getExternalStorageDirectory().getAbsolutePath()+"/nikalodean/2nik.jpg";//change accordingly
+            String filename = MainActivity.imagePath;
             DataSource source = new FileDataSource(filename);
             messageBodyPart2.setDataHandler(new DataHandler(source));
             messageBodyPart2.setFileName(filename);

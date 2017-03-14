@@ -3,6 +3,7 @@ package com.example.naval.mailer;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -431,7 +432,14 @@ public class FacebookFragment extends Fragment {
 
     private void postPhoto() {
         Log.d("naval"," postPhoto ");
-        Bitmap image = BitmapFactory.decodeResource(this.getResources(), R.drawable.user_default);
+
+       // Drawable img = Drawable.createFromPath(MainActivity.imagePath);
+       // Bitmap image = BitmapFactory.decodeResource(this.getResources(), img);
+
+        Bitmap image = BitmapFactory.decodeFile(MainActivity.imagePath);
+
+        Log.d("naval"," here is the final FB photo path :"+ MainActivity.imagePath);
+
 
         SharePhoto sharePhoto = new SharePhoto.Builder().setBitmap(image).build();
         ArrayList<SharePhoto> photos = new ArrayList<>();
