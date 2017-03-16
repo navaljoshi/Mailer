@@ -21,15 +21,17 @@
     <ImageView
         android:layout_width="565dp"
         android:layout_height="590dp"
-        android:scaleType="fitXY"
-        android:layout_centerHorizontal="true"
 
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="200dp"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         android:visibility="visible"
-        android:background="@drawable/com_facebook_button_login_silver_background"
         android:contentDescription="MainImages"
+        android:adjustViewBounds="true"
+
+        android:background="#000000"
+        android:padding="10dp"
         android:id="@+id/imgHome" />
 
     <LinearLayout
@@ -43,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/facebook"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="30dp"
             android:id="@+id/btFacebook"
             android:visibility="gone" />
         <Button
@@ -70,7 +72,6 @@
             android:background="@drawable/share"
             android:layout_marginBottom="40dp"
             android:id="@+id/btshr" />
-
 
 
         <LinearLayout
@@ -116,13 +117,17 @@
 </RelativeLayout>
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textAlignment="center"
         android:background="@drawable/shared"
         android:visibility="gone"
         android:id="@+id/imgShared"
-        android:alpha="100"/>
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:alpha="0.6"/>
+
+
 
 </FrameLayout>
 

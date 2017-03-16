@@ -1,5 +1,6 @@
 package com.example.naval.mailer;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -66,6 +68,7 @@ public class FacebookFragment extends Fragment {
     private CallbackManager callbackManager;
     private ProfileTracker profileTracker;
     private ShareDialog shareDialog;
+    ProgressDialog progressdialog;
     private FacebookCallback<Sharer.Result> shareCallback = new FacebookCallback<Sharer.Result>() {
         @Override
         public void onCancel() {
@@ -86,12 +89,14 @@ public class FacebookFragment extends Fragment {
 
             if (result.getPostId() != null) {
                 String title = getString(R.string.success);
+                progressdialog.dismiss();
+                Toast.makeText(getActivity(), "Post successfully shared.", Toast.LENGTH_LONG).show();
 
-               // getView().getParent()
+                // getView().getParent()
 
                 String id = result.getPostId();
                 String alertMessage = getString(R.string.successfully_posted_post, id);
-               // showResult(title, alertMessage);
+                // showResult(title, alertMessage);
                 Log.d("naval"," onSuccess");
                 getActivity().finish();//chance vaibhav
             }
@@ -133,13 +138,16 @@ public class FacebookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_facebook, parent, false);
         loginButton = (LoginButton) v.findViewById(R.id.loginButton);
-        loginButton.performClick(); // moving stright to FORM login page
+        // loginButton.performClick(); // moving stright to FORM login page
         Log.d("navall"," Indide View ");
         // If using in a fragment
         loginButton.setFragment(this);
         callbackManager = CallbackManager.Factory.create();
+        progressdialog = new ProgressDialog(getActivity());
+        progressdialog.setMessage("Please Wait....");
         // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Toast toast = Toast.makeText(getActivity(), "Logged In", Toast.LENGTH_SHORT);
@@ -153,7 +161,8 @@ public class FacebookFragment extends Fragment {
                 updateUI();
 
                 Log.d("naval"," onSuccess INSIDE onCreateView");
-                postPhotoButton.performClick();
+                //postPhotoButton.performClick();
+                postPhoto();
 
 
             }
@@ -189,6 +198,7 @@ public class FacebookFragment extends Fragment {
             }
 
         });
+        LoginManager.getInstance().logInWithPublishPermissions(this, Arrays.asList(PERMISSION));
         shareDialog = new ShareDialog(this);
         shareDialog.registerCallback(
                 callbackManager,
@@ -209,8 +219,8 @@ public class FacebookFragment extends Fragment {
         };
 
 
-    profilePicImageView = (ImageView) v.findViewById(R.id.profilePicture);
-    greeting = (TextView) v.findViewById(R.id.greeting);
+        profilePicImageView = (ImageView) v.findViewById(R.id.profilePicture);
+        greeting = (TextView) v.findViewById(R.id.greeting);
 
 
         Log.d("naval"," Adding button listners ");
@@ -284,35 +294,35 @@ public class FacebookFragment extends Fragment {
                 SharePhotoContent.class);
 
 
-    loginButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            Log.d("naval"," On view click  ");
+                Log.d("naval"," On view click  ");
 
-           // LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("public_profile"));
-            if(!postingEnabled) {
+                // LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("public_profile"));
+                if(!postingEnabled) {
 
-                postingEnabled = true;
-                postPhotoButton.setVisibility(View.VISIBLE);
-                postStatusUpdateButton.setVisibility(View.INVISIBLE);
-                getUserInterests.setVisibility(View.INVISIBLE);
-
-
+                    postingEnabled = true;
+                    postPhotoButton.setVisibility(View.VISIBLE);
+                    postStatusUpdateButton.setVisibility(View.INVISIBLE);
+                    getUserInterests.setVisibility(View.INVISIBLE);
 
 
-            }else{
 
-                postingEnabled = false;
-                postPhotoButton.setVisibility(View.GONE);
-                postStatusUpdateButton.setVisibility(View.GONE);
-                getUserInterests.setVisibility(View.GONE);
+
+                }else{
+
+                    postingEnabled = false;
+                    postPhotoButton.setVisibility(View.GONE);
+                    postStatusUpdateButton.setVisibility(View.GONE);
+                    getUserInterests.setVisibility(View.GONE);
+
+                }
+
 
             }
-
-
-        }
-    });
+        });
 
 
 
@@ -433,13 +443,13 @@ public class FacebookFragment extends Fragment {
     private void postPhoto() {
         Log.d("naval"," postPhoto ");
 
-       // Drawable img = Drawable.createFromPath(MainActivity.imagePath);
-       // Bitmap image = BitmapFactory.decodeResource(this.getResources(), img);
+        // Drawable img = Drawable.createFromPath(MainActivity.imagePath);
+        // Bitmap image = BitmapFactory.decodeResource(this.getResources(), img);
 
-        Bitmap image = BitmapFactory.decodeFile(MainActivity.imagePath);
+        Bitmap image = BitmapFactory.decodeFile(MainActivity.imagePath.toString());
 
         Log.d("naval"," here is the final FB photo path :"+ MainActivity.imagePath);
-
+        progressdialog.show();
 
         SharePhoto sharePhoto = new SharePhoto.Builder().setBitmap(image).build();
         ArrayList<SharePhoto> photos = new ArrayList<>();
@@ -454,9 +464,9 @@ public class FacebookFragment extends Fragment {
         } else {
             pendingAction = PendingAction.POST_PHOTO;
             // We need to get new permissions, then complete the action when we get called back.
-            LoginManager.getInstance().logInWithPublishPermissions(
-                    this,
-                    Arrays.asList(PERMISSION));
+            // LoginManager.getInstance().logInWithPublishPermissions(
+            //       this,
+            //     Arrays.asList(PERMISSION));
         }
         LoginManager.getInstance().logOut(); // naval logout
         Log.d("naval","Logout of FB and posted image ");

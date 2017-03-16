@@ -34,6 +34,10 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+
+import com.romainpiel.titanic.library.Titanic;
+import com.romainpiel.titanic.library.TitanicTextView;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Properties;
@@ -71,6 +75,7 @@ public class MainActivity extends AppCompatActivity  {
     public Drawable homeDrwabletemp;
     public Drawable homeDrwable2;
     public Drawable homeDrwable3;
+    public TitanicTextView txtView ;
 
     // main path of the selected image
 
@@ -83,11 +88,23 @@ public class MainActivity extends AppCompatActivity  {
 
     FileObserver observer;
 
+    private Titanic mTitanic;
+    private TitanicTextView mTxt;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+      //  mTitanic = new Titanic();
+      //  mTxt = (TitanicTextView) findViewById(R.id.txt);
+     //   mTitanic.start(mTxt);
+
+
+
 
         // Intializing Components
         SharedImg = (ImageView)findViewById(R.id.imgShared);
@@ -100,6 +117,7 @@ public class MainActivity extends AppCompatActivity  {
         thumbnail1 = (ImageView)findViewById(R.id.img1);
         thumbnail2 = (ImageView)findViewById(R.id.img2);
         thumbnail3 = (ImageView)findViewById(R.id.img3);
+       // txtView = (TitanicTextView)findViewById(R.id.txt) ;
 
         haveNetworkConnection();//check is net is there?
 
@@ -107,12 +125,6 @@ public class MainActivity extends AppCompatActivity  {
         observer(); // start observing the pics folder
 
         // Applying Event listners on Buttons
-
-
-        //home.setImageBitmap(bmImg);
-       // thumbnail1.setImageBitmap(bmImg);
-       // thumbnail2.setImageBitmap(bmImg);
-       // thumbnail3.setImageBitmap(bmImg);
 
         shareButton.setOnClickListener(new View.OnClickListener() {
 
@@ -231,28 +243,46 @@ public class MainActivity extends AppCompatActivity  {
     // fucntion to move from Home - FB&GMAIL sharing screen
     void homeScreen()
     {
-        shareButton.setVisibility(View.VISIBLE);
-        SharedImg.setVisibility(View.GONE);
-        //gallery.setVisibility(GONE); // gallery button disabled
-        //social.setVisibility(View.VISIBLE); //social buttons enabled
-       // fbButton.setVisibility(View.VISIBLE);
-       // mailButton.setVisibility(View.VISIBLE);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("LVMH", "Set Main Image and thumbnail 3"+ imagePath );
+             //   txtView.setVisibility(View.VISIBLE);
+                shareButton.setVisibility(View.VISIBLE);
+                SharedImg.setVisibility(View.GONE);
+
+
+            }
+        });
+
 
     }
     // fucntion to move from sharing screen FB&GMAIL to Shared successfull screen
-    void successSharedScreen() {
+      void successSharedScreen() {
 
 
-        social.setVisibility(View.GONE); //social buttons enabled
-        fbButton.setVisibility(View.GONE);
-        mailButton.setVisibility(View.GONE);
+
 
         //enable shared image picture
-        SharedImg.setVisibility(View.VISIBLE);
-        findViewById(android.R.id.content).invalidate();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("LVMH", "successSharedScreen"+ imagePath );
+                social.setVisibility(View.GONE); //social buttons enabled
+                fbButton.setVisibility(View.GONE);
+                mailButton.setVisibility(View.GONE);
+                shareButton.setVisibility(GONE);
+                SharedImg.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+//        findViewById(android.R.id.content).invalidate();
 
         try{
-            Thread.sleep(5000);
+           Thread.sleep(10000);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -279,10 +309,17 @@ public void setDrawableImage()
 {
     Log.d("LVMH", "called getDrawableImage" );
 
-    File file = new File(android.os.Environment.getExternalStorageDirectory(), "Lvmh");
-    imageCount = file.listFiles().length -1  ;
+    // remove text on main screen
+//    txtView.setVisibility(View.INVISIBLE);
 
-        String imagePath = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount+"img.jpg";
+    File file = new File(android.os.Environment.getExternalStorageDirectory(), "Lvmh");
+    imageCount = file.listFiles().length - 1   ;
+
+    Log.d("LVMH", "Path to start with is :" + imageCount);
+
+
+
+        String imagePath = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount +"img.jpg";
 
         homeDrwable = Drawable.createFromPath(imagePath);
         runOnUiThread(new Runnable() {
@@ -292,9 +329,6 @@ public void setDrawableImage()
                 home.setImageDrawable(homeDrwable);
                 thumbnail1.setImageDrawable(homeDrwable);
 
-                //home.setVisibility(View.VISIBLE);
-                //home.invalidate();
-                //thumbnail1.invalidate();
 
             }
         });
@@ -313,7 +347,7 @@ public void setDrawableImage()
         }
     });
 
-    int imageCount2 = imageCount - 2;
+    int imageCount2 = imageCount -2;
      imagePath2 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount2+"img.jpg";
     homeDrwable3 = Drawable.createFromPath(imagePath2);
     runOnUiThread(new Runnable() {
@@ -408,6 +442,7 @@ public void setDrawableImage()
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;
 
+
         ConnectivityManager cm = (ConnectivityManager) getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
         NetworkInfo[] netInfo = cm.getAllNetworkInfo();
         for (NetworkInfo ni : netInfo) {
@@ -466,8 +501,8 @@ public void setDrawableImage()
                 //Changing image view
                 //Getting content for email
                 String email = editTextEmail.getText().toString().trim();
-                String subject = "LVMH";
-                String message = editTextName.getText().toString().trim();
+                String subject = editTextName.getText().toString().trim();
+                String message = "";
 
                 //Creating SendMail object
                 SendMail sm = new SendMail(getWindow().getContext(), email, subject, message);

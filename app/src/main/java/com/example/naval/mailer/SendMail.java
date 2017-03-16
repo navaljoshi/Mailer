@@ -4,11 +4,15 @@ package com.example.naval.mailer;
  * Created by naval on 09/03/17.
  */
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import java.io.File;
@@ -74,8 +78,15 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
         progressDialog.dismiss();
         //Showing a success message
         Toast.makeText(context,"Message Sent",Toast.LENGTH_LONG).show();
-    }
 
+        // move the screen to shared screen
+        //close keyboard
+        Log.d("LVMH","Mail sent ");
+
+        // calling success screen
+        Object d = new MainActivity();
+        ((MainActivity) d).successSharedScreen();
+    }
 
     public void addAtachments(String attachments, Multipart multipart)
             throws MessagingException, AddressException {
@@ -105,11 +116,7 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
         props.put("mail.smtp.host", HOST_NAME);
         props.put("mail.smtp.auth", "true");
 
-      /*  props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.socketFactory.port", "465");
-        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.port", "465");*/
+
 
         //Creating a new session
         session = Session.getDefaultInstance(props,
@@ -128,12 +135,13 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
 
             //3) create MimeBodyPart object and set your message text
             BodyPart messageBodyPart1 = new MimeBodyPart();
-            messageBodyPart1.setText("Hello,"+message+",Here is your image from LVMH");
+            messageBodyPart1.setText("Hello,"+subject+",Here is your image from LVMH");
 
             //4) create new MimeBodyPart object and set DataHandler object to this object
             MimeBodyPart messageBodyPart2 = new MimeBodyPart();
 
             String filename = MainActivity.imagePath;
+            Log.d("LVMH","Mail file to be send :  "+MainActivity.imagePath);
             DataSource source = new FileDataSource(filename);
             messageBodyPart2.setDataHandler(new DataHandler(source));
             messageBodyPart2.setFileName(filename);
@@ -151,6 +159,10 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
             Transport.send(message);
 
             System.out.println("message sent....");
+
+            // call function from Main activity to gotto final sxreen
+
+
         }catch (MessagingException ex) {ex.printStackTrace();}
    return null;
 }
