@@ -84,8 +84,8 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
         Log.d("LVMH","Mail sent ");
 
         // calling success screen
-        Object d = new MainActivity();
-        ((MainActivity) d).successSharedScreen();
+       // Object d = new MainActivity();
+      //  ((MainActivity) d).successSharedScreen();
     }
 
     public void addAtachments(String attachments, Multipart multipart)
