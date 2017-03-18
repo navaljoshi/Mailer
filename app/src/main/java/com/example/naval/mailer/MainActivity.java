@@ -14,6 +14,9 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -34,6 +37,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -412,6 +417,41 @@ public class MainActivity extends Activity  {
 
 
     }
+
+    public void onShakeImage() {
+
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                RelativeLayout image;
+                image = (RelativeLayout) findViewById(R.id.activity_main);
+                final Animation animShake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
+                image.startAnimation(animShake);
+
+                image.setAnimation(animShake);
+
+                // now play music too
+                audioPlayer();
+
+            }
+        });
+
+
+
+    }
+
+    public void audioPlayer(){
+        //set up MediaPlayer
+        try {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            r.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     // fucntion to move from Home - FB&GMAIL sharing screen
     void sharingScreen()
     {
@@ -491,6 +531,10 @@ public class MainActivity extends Activity  {
 public void setDrawableImage(int count )
 {
     Log.d("LVMH", "called getDrawableImage" );
+
+    //lets shkae & play music
+
+    onShakeImage();
 
 
     new Timer().schedule(new TimerTask() {
