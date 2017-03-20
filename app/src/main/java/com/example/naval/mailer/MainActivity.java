@@ -92,26 +92,19 @@ public class MainActivity extends Activity  {
     public Button shareButton ;
     public Button mailButton ;
     public Button fbButton ;
-    public LinearLayout gallery ;
     public LinearLayout gallery1 ;
     public LinearLayout social  ;
     public ImageView home  ;
     public ImageView thumbnail1  ;
     public ImageView thumbnail2  ;
     public ImageView thumbnail3  ;
-    public ImageView thumbnail4  ;
-    public ImageView thumbnail5  ;
-    public ImageView thumbnail6  ;
     public ImageView more  ;
     public ImageView less  ;
-    public Drawable homeDrwable;
     public Drawable homeDrwabletemp;
     public Drawable homeDrwable2;
     public Drawable homeDrwable3;
     public Drawable homeDrwable4;
-    public Drawable homeDrwable5;
-    public Drawable homeDrwable6;
-    public Drawable homeDrwable7;
+
     public TitanicTextView txtView ;
 
     // main path of the selected image
@@ -120,9 +113,13 @@ public class MainActivity extends Activity  {
     public String imagePath1 ;
     public String imagePath2 ;
     public String imagePath3 ;
-    public String imagePath4 ;
-    public String imagePath5 ;
     public String imagePath6 ;
+
+    public int imageCount1;
+    public int imageCount2;
+    public int imageCount3;
+
+
     File file= new File(android.os.Environment.getExternalStorageDirectory(),"lvmh");
     public int imageCount  = file.listFiles().length+1;
 
@@ -152,35 +149,25 @@ public class MainActivity extends Activity  {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-
         syncServer(); // calling syncServer to start listening
-
-
         // Intializing Components
         SharedImg = (ImageView)findViewById(R.id.imgShared);
         shareButton = (Button) findViewById(R.id.btshr);
         mailButton = (Button) findViewById(R.id.btGmail);
         fbButton = (Button) findViewById(R.id.btFacebook);
-        gallery  = (LinearLayout) findViewById(R.id.linGal);
+        //gallery  = (LinearLayout) findViewById(R.id.linGal);
         gallery1 = (LinearLayout) findViewById(R.id.linGal1);
         social  = (LinearLayout) findViewById(R.id.linSocial);
         home = (ImageView)findViewById(R.id.imgHome);
-        thumbnail1 = (ImageView)findViewById(R.id.img1);
-        thumbnail2 = (ImageView)findViewById(R.id.img2);
-        thumbnail3 = (ImageView)findViewById(R.id.img3);
-        thumbnail4 = (ImageView)findViewById(R.id.img4);
-        thumbnail5 = (ImageView)findViewById(R.id.img5);
-        thumbnail6 = (ImageView)findViewById(R.id.img6);
+
+        thumbnail1 = (ImageView)findViewById(R.id.img4);
+        thumbnail2 = (ImageView)findViewById(R.id.img5);
+        thumbnail3 = (ImageView)findViewById(R.id.img6);
         more = (ImageView)findViewById(R.id.img7);
         less = (ImageView)findViewById(R.id.img8);
 
-       // txtView = (TitanicTextView)findViewById(R.id.txt) ;
 
-
-        //observer(); // start observing the pics folder
-
-        // Applying Event listners on Buttons
-
+/*=================================== Button Event Listeners =================================================*/
         shareButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -227,9 +214,7 @@ public class MainActivity extends Activity  {
                     //No internet connection here
                     Toast.makeText(getApplicationContext(), "No Internet Connection , Please Try Later",
                             Toast.LENGTH_LONG).show();
-
                 }
-
             }
         });
 
@@ -289,54 +274,8 @@ public class MainActivity extends Activity  {
                 });
             }
         });
-        thumbnail4.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
 
-                imagePath = imagePath4;
-                homeDrwabletemp = Drawable.createFromPath(imagePath4);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d("LVMH", "Image Drawable 4 with Path: "+ imagePath );
-                        home.setImageDrawable(homeDrwabletemp);
-                        home.invalidate();
 
-                    }
-                });
-            }
-        });
-        thumbnail5.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                imagePath = imagePath5;
-                homeDrwabletemp = Drawable.createFromPath(imagePath5);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d("LVMH", "Image Drawable 5 with Path: "+ imagePath );
-                        home.setImageDrawable(homeDrwabletemp);
-                        home.invalidate();
-
-                    }
-                });
-            }
-        });
-        thumbnail6.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                imagePath = imagePath6;
-                homeDrwabletemp = Drawable.createFromPath(imagePath6);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d("LVMH", "Image Drawable 6 with Path: "+ imagePath );
-                        home.setImageDrawable(homeDrwabletemp);
-                        home.invalidate();
-
-                    }
-                });
-            }
-        });
 
         more.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -347,8 +286,7 @@ public class MainActivity extends Activity  {
                     @Override
                     public void run() {
                         Log.d("LVMH", "Clicked More images , Path: "+ imagePath );
-                            setDrawableImage(imageCount );
-
+                            setDrawableImage(imageCount3+3,true);
                     }
                 });
             }
@@ -369,10 +307,7 @@ public class MainActivity extends Activity  {
                         home.invalidate();
 
 
-                            setDrawableImage(imageCount );
-
-
-
+                            setDrawableImage(imageCount1,true);
 
                     }
                 });
@@ -381,7 +316,10 @@ public class MainActivity extends Activity  {
 
 
     }
+/*=================================== Button Event Listeners =================================================*/
 
+
+    /*=================================== Functions  =================================================*/
 
     void syncServer()
     {
@@ -393,7 +331,7 @@ public class MainActivity extends Activity  {
         // Set an EditText view to get user input
         alert.setTitle("LVMH Sync Server ");
         alert.setMessage(" Port:8880 & IP:"+getIpAddress());
-        alert.setMessage(" press OK to start the Server ");
+        //alert.setMessage(" press OK to start the Server ");
 
 
 
@@ -438,8 +376,6 @@ public class MainActivity extends Activity  {
             }
         });
 
-
-
     }
 
     public void audioPlayer(){
@@ -455,12 +391,50 @@ public class MainActivity extends Activity  {
     // fucntion to move from Home - FB&GMAIL sharing screen
     void sharingScreen()
     {
-        shareButton.setVisibility(GONE);//
-        gallery.setVisibility(GONE); // gallery button disabled
-        gallery1.setVisibility(GONE); // gallery button disabled
-        social.setVisibility(View.VISIBLE); //social buttons enabled
-        fbButton.setVisibility(View.VISIBLE);
-        mailButton.setVisibility(View.VISIBLE);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("LVMH", "Inside sharingScreen "+ imagePath );
+
+             /*   SharedImg.setVisibility(View.VISIBLE);
+                SharedImg.setImageDrawable(getResources().getDrawable(R.drawable.androidlogo));
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        // this code will be executed after 2 seconds
+                        homeScreen();
+                    }
+                }, 2000);
+                SharedImg.setImageDrawable(getResources().getDrawable(R.drawable.facebook));
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        // this code will be executed after 2 seconds
+                        homeScreen();
+                    }
+                }, 2000);
+                SharedImg.setImageDrawable(getResources().getDrawable(R.drawable.gmaillogo));
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        // this code will be executed after 2 seconds
+                        homeScreen();
+                    }
+                }, 2000);
+                SharedImg.setVisibility(View.GONE); */
+
+
+                more.setVisibility(View.GONE);
+                less.setVisibility(View.GONE);
+                shareButton.setVisibility(GONE);//
+
+                gallery1.setVisibility(GONE); // gallery button disabled
+                social.setVisibility(View.VISIBLE); //social buttons enabled
+                fbButton.setVisibility(View.VISIBLE);
+                mailButton.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
     // fucntion to move from Home - FB&GMAIL sharing screen
@@ -474,8 +448,11 @@ public class MainActivity extends Activity  {
              //   txtView.setVisibility(View.VISIBLE);
                 shareButton.setVisibility(View.VISIBLE);
                 SharedImg.setVisibility(View.GONE);
-                gallery.setVisibility(View.VISIBLE); // gallery button disabled
+                //gallery.setVisibility(View.VISIBLE); // gallery button disabled
                 gallery1.setVisibility(View.VISIBLE); // gallery button disabled
+
+                more.setVisibility(View.VISIBLE);
+                less.setVisibility(View.VISIBLE);
 
             }
         });
@@ -527,110 +504,124 @@ public class MainActivity extends Activity  {
     }
 
 
+public void resizeImage(int imageCount)
 
-public void setDrawableImage(int count )
+{
+    Log.d("LVMH", " resizeImage path :"+BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount +"img.jpg"));
+    //File dir=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+    Bitmap b= BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount +"img.jpg");
+    Bitmap out = Bitmap.createScaledBitmap(b, 320, 480, false);
+
+    File file = new File(Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount +"img.jpg");
+    FileOutputStream fOut;
+    try {
+        fOut = new FileOutputStream(file);
+        out.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+        fOut.flush();
+        fOut.close();
+        b.recycle();
+        out.recycle();
+    } catch (Exception e) {}
+}
+
+public void setDrawableImage(int count , boolean flag)
 {
     Log.d("LVMH", "called getDrawableImage" );
+    //lets shake & play music
+     onShakeImage();
 
-    //lets shkae & play music
-
-    onShakeImage();
-
-
+   // wait for 5 seconds . so we can decde image
     new Timer().schedule(new TimerTask() {
         @Override
         public void run() {
-            // this code will be executed after 5 seconds
-
         }
     }, 5000);
 
 
-
     Log.d("LVMH", "Path to start with is :" + imageCount);
 
-    String imagePath = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount +"img.jpg";
+    if(flag) {
+        imageCount1 = count -1 ;
+    }
+    else
+    {
+        imageCount1 = imageCount - 1;
+    }
 
-
-    int imageCount1 = imageCount - 1;
+    if(imageCount1 == 0)
+    {
+        imageCount1 = 27;
+        imageCount = 27;
+    }
     imagePath1 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount1+"img.jpg";
 
     homeDrwable2 = Drawable.createFromPath(imagePath1);
+    Log.d("LVMH", "Set thumbnail2 " + imageCount1+"img.jpg");
     runOnUiThread(new Runnable() {
         @Override
         public void run() {
-            Log.d("LVMH", "Set thumbnail2 " );
+           // Log.d("LVMH", "Set thumbnail2 " );
             thumbnail1.setImageDrawable(homeDrwable2);
             home.setImageDrawable(homeDrwable2);
+            more.setVisibility(View.VISIBLE);
+            less.setVisibility(View.VISIBLE);
             //thumbnail2.invalidate();
 
         }
     });
 
-    int imageCount2 = imageCount - 2;
+    if(flag) {
+        imageCount2 = count - 2 ;
+    }
+    else
+    {
+        imageCount2 = imageCount - 2;
+    }
+
+    if(imageCount2 == 0)
+    {
+        imageCount2 = 27;
+        imageCount = 27;
+    }
      imagePath2 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount2+"img.jpg";
+    Log.d("LVMH", "Set thumbnail3 " + imageCount2+"img.jpg");
     homeDrwable3 = Drawable.createFromPath(imagePath2);
     runOnUiThread(new Runnable() {
         @Override
         public void run() {
-            Log.d("LVMH", "Set thumbnail3 " );
+
             thumbnail2.setImageDrawable(homeDrwable3);
             //thumbnail3.invalidate();
 
         }
     });
 
-    int imageCount3 = imageCount - 3;
+    if(flag) {
+        imageCount3 = count -3 ;
+    }
+    else
+    {
+        imageCount3 = imageCount - 3;
+    }
+    if(imageCount3 == 0)
+    {
+        imageCount3 = 27;
+        imageCount = 27;
+    }
     imagePath3 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount3+"img.jpg";
     homeDrwable4 = Drawable.createFromPath(imagePath3);
+    Log.d("LVMH", "Set thumbnail4 " + imageCount3+"img.jpg");
     runOnUiThread(new Runnable() {
         @Override
         public void run() {
-            Log.d("LVMH", "Set thumbnail4 " );
+           // Log.d("LVMH", "Set thumbnail4 " );
             thumbnail3.setImageDrawable(homeDrwable4);
             //thumbnail3.invalidate();
 
         }
     });
 
-    int imageCount4 = imageCount - 4 ;
-    imagePath4 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount4+"img.jpg";
-    homeDrwable5 = Drawable.createFromPath(imagePath4);
-    runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-            Log.d("LVMH", "Set thumbnail5 " );
-            thumbnail4.setImageDrawable(homeDrwable5);
-            //thumbnail3.invalidate();
 
-        }
-    });
-
-    int imageCount5 = imageCount - 5;
-    imagePath5 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount5+"img.jpg";
-    homeDrwable6 = Drawable.createFromPath(imagePath5);
-    runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-            Log.d("LVMH", "Set thumbnail6 " );
-            thumbnail5.setImageDrawable(homeDrwable6);
-            //thumbnail3.invalidate();
-
-        }
-    });
-
-    int imageCount6 = imageCount - 6;
-    imagePath6 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount6+"img.jpg";
-    homeDrwable7 = Drawable.createFromPath(imagePath6);
-    runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-            Log.d("LVMH", "Set thumbnail7 " );
-            thumbnail6.setImageDrawable(homeDrwable7);
-            //thumbnail3.invalidate();
-
-        }
-    });
 }
 
 
@@ -653,7 +644,7 @@ public void setDrawableImage(int count )
                     File file = new File(android.os.Environment.getExternalStorageDirectory(), "Lvmh");
 
 
-                        setDrawableImage(file.listFiles().length);
+                        setDrawableImage(file.listFiles().length,false);
 
                     }
                 }
@@ -661,9 +652,6 @@ public void setDrawableImage(int count )
         fobsv.startWatching();
 
     }
-
-
-
 
 
     public boolean haveNetworkConnection() {
@@ -845,7 +833,10 @@ public void setDrawableImage(int count )
 
         return ip;
     }
+    /*=================================== Button Event Listeners END =================================================*/
 
+
+    /*=================================== Classes  =================================================*/
     public class ServerSocketThread extends Thread {
 
         @Override
@@ -933,7 +924,7 @@ public void setDrawableImage(int count )
                 imageCount++;// count increase for file name
 
 
-                System.out.println("Receiving...");
+                //System.out.println("Receiving...");
                 Log.d("naval", "Receiving");
 
                 //following lines read the input slide file byte by byte
@@ -950,8 +941,11 @@ public void setDrawableImage(int count )
 
                 bufferedOutputStream.write(mybytearray, 0, current);
 
-                if(imageCount>7)
-                setDrawableImage(imageCount);// calle to populate UI
+                //resizeImage(imageCount); // resize the image
+                File file1= new File(android.os.Environment.getExternalStorageDirectory(),"lvmh");
+
+                if( file1.listFiles().length>7)
+                setDrawableImage(imageCount,false);// calleD to populate UI
 
                 bufferedOutputStream.flush();
                 bufferedOutputStream.close();
@@ -959,7 +953,7 @@ public void setDrawableImage(int count )
                 //clientSocket.close();
                 //serverSocket.close();
 
-                System.out.println("Sever recieved the file");
+               // System.out.println("Sever received the file");
                 Log.d("naval","server received file");
             }
             catch (IOException e)
