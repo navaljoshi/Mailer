@@ -442,13 +442,15 @@ public class FacebookFragment extends Fragment {
 
     private void postPhoto() {
         Log.d("naval"," postPhoto ");
+        String fbImagePath = MainActivity.imagePath;
 
         // Drawable img = Drawable.createFromPath(MainActivity.imagePath);
         // Bitmap image = BitmapFactory.decodeResource(this.getResources(), img);
 
         Bitmap image = BitmapFactory.decodeFile(MainActivity.imagePath.toString());
 
-        Log.d("naval"," here is the final FB photo path :"+ MainActivity.imagePath);
+
+        Log.d("naval"," here is the final FB photo path :"+ fbImagePath);
         progressdialog.show();
 
         SharePhoto sharePhoto = new SharePhoto.Builder().setBitmap(image).build();

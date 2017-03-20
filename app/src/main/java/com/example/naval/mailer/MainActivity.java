@@ -1,6 +1,8 @@
 package com.example.naval.mailer;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -9,31 +11,18 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.FileObserver;
-import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -43,18 +32,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.romainpiel.titanic.library.Titanic;
 import com.romainpiel.titanic.library.TitanicTextView;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,15 +51,10 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-
 import static android.view.View.GONE;
-import static android.view.View.generateViewId;
 
 public class MainActivity extends Activity  {
 
@@ -92,6 +73,8 @@ public class MainActivity extends Activity  {
     public Button shareButton ;
     public Button mailButton ;
     public Button fbButton ;
+
+    public LinearLayout gallery2 ;
     public LinearLayout gallery1 ;
     public LinearLayout social  ;
     public ImageView home  ;
@@ -121,7 +104,7 @@ public class MainActivity extends Activity  {
 
 
     File file= new File(android.os.Environment.getExternalStorageDirectory(),"lvmh");
-    public int imageCount  = file.listFiles().length+1;
+    public int imageCount = file.listFiles().length;
 
 
 
@@ -144,7 +127,7 @@ public class MainActivity extends Activity  {
     protected void onCreate(Bundle savedInstanceState) {
 
 
-
+        Log.d("LVMH","Image count on start :"+imageCount);
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -157,6 +140,7 @@ public class MainActivity extends Activity  {
         fbButton = (Button) findViewById(R.id.btFacebook);
         //gallery  = (LinearLayout) findViewById(R.id.linGal);
         gallery1 = (LinearLayout) findViewById(R.id.linGal1);
+        gallery2 = (LinearLayout) findViewById(R.id.linShare);
         social  = (LinearLayout) findViewById(R.id.linSocial);
         home = (ImageView)findViewById(R.id.imgHome);
 
@@ -175,7 +159,6 @@ public class MainActivity extends Activity  {
                 // TODO Auto-generated method stub
 
                 Log.d("LVMH", "share button clicked ");
-
 
                 sharingScreen(); // call funtion to clear screen for FB&GMAIL sharing screen
 
@@ -212,7 +195,7 @@ public class MainActivity extends Activity  {
                 else
                 {
                     //No internet connection here
-                    Toast.makeText(getApplicationContext(), "No Internet Connection , Please Try Later",
+                    Toast.makeText(getApplicationContext(), "No Internet Connection , Please Try Later or try Offline Mail",
                             Toast.LENGTH_LONG).show();
                 }
             }
@@ -286,7 +269,7 @@ public class MainActivity extends Activity  {
                     @Override
                     public void run() {
                         Log.d("LVMH", "Clicked More images , Path: "+ imagePath );
-                            setDrawableImage(imageCount3+3,true);
+                            setDrawableImage(imageCount1,true);
                     }
                 });
             }
@@ -307,7 +290,7 @@ public class MainActivity extends Activity  {
                         home.invalidate();
 
 
-                            setDrawableImage(imageCount1,true);
+                            setDrawableImage(imageCount3,true);
 
                     }
                 });
@@ -322,7 +305,10 @@ public class MainActivity extends Activity  {
     /*=================================== Functions  =================================================*/
 
     void syncServer()
+
+
     {
+        Log.d("LVMH", "Inside syncServer");
         final AlertDialog alert;
         alert = new AlertDialog.Builder(this).create();
         alert.setTitle("Alert Dialog With EditText"); //Set Alert dialog title here
@@ -330,8 +316,9 @@ public class MainActivity extends Activity  {
 
         // Set an EditText view to get user input
         alert.setTitle("LVMH Sync Server ");
-        alert.setMessage(" Port:8880 & IP:"+getIpAddress());
+        alert.setMessage(" Port:8880 & IP:"+"192.168.8.88");
         //alert.setMessage(" press OK to start the Server ");
+
 
 
 
@@ -352,6 +339,16 @@ public class MainActivity extends Activity  {
         });
 
         alert.show();
+
+  /*      new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // this code will be executed after 2 seconds
+                homeScreen();
+            }
+        }, 5000);
+
+        alert.cancel();*/
 
 
     }
@@ -391,51 +388,30 @@ public class MainActivity extends Activity  {
     // fucntion to move from Home - FB&GMAIL sharing screen
     void sharingScreen()
     {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("LVMH", "Inside sharingScreen "+ imagePath );
+        Drawable myDrawable = getResources().getDrawable(R.drawable.backtrans);
+        SharedImg.setImageDrawable(myDrawable);
+        SharedImg.setVisibility(View.VISIBLE);
+      //  SharedImg.setImageDrawable(R.drawable.backtrans);
 
-             /*   SharedImg.setVisibility(View.VISIBLE);
-                SharedImg.setImageDrawable(getResources().getDrawable(R.drawable.androidlogo));
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        // this code will be executed after 2 seconds
-                        homeScreen();
-                    }
-                }, 2000);
-                SharedImg.setImageDrawable(getResources().getDrawable(R.drawable.facebook));
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        // this code will be executed after 2 seconds
-                        homeScreen();
-                    }
-                }, 2000);
-                SharedImg.setImageDrawable(getResources().getDrawable(R.drawable.gmaillogo));
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        // this code will be executed after 2 seconds
-                        homeScreen();
-                    }
-                }, 2000);
-                SharedImg.setVisibility(View.GONE); */
+        SharedImg.animate().translationY(SharedImg.getHeight())
+                        .alpha(0.0f)
+                        .setDuration(3500)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                SharedImg.setVisibility(View.GONE);
+                                more.setVisibility(GONE);
+                                less.setVisibility(View.GONE);
+                                shareButton.setVisibility(GONE);//
 
+                                gallery1.setVisibility(GONE); // gallery button disabled
+                                social.setVisibility(View.VISIBLE); //social buttons enabled
+                                fbButton.setVisibility(View.VISIBLE);
+                                mailButton.setVisibility(View.VISIBLE);
+                            }
 
-                more.setVisibility(View.GONE);
-                less.setVisibility(View.GONE);
-                shareButton.setVisibility(GONE);//
-
-                gallery1.setVisibility(GONE); // gallery button disabled
-                social.setVisibility(View.VISIBLE); //social buttons enabled
-                fbButton.setVisibility(View.VISIBLE);
-                mailButton.setVisibility(View.VISIBLE);
-            }
-        });
-
-    }
+    });}
 
     // fucntion to move from Home - FB&GMAIL sharing screen
     void homeScreen()
@@ -472,6 +448,8 @@ public class MainActivity extends Activity  {
                 fbButton.setVisibility(View.GONE);
                 mailButton.setVisibility(View.GONE);
                 shareButton.setVisibility(GONE);
+                Drawable myDrawable = getResources().getDrawable(R.drawable.shared);
+                SharedImg.setImageDrawable(myDrawable);
                 SharedImg.setVisibility(View.VISIBLE);
 
             }
@@ -537,24 +515,19 @@ public void setDrawableImage(int count , boolean flag)
         }
     }, 5000);
 
+    Log.d("LVMH", "Count to start with in setDrawableImage Local:" + count);
+    Log.d("LVMH", "Count to start with in setDrawableImage :" + imageCount);
+    imageCount1 = count ;
 
-    Log.d("LVMH", "Path to start with is :" + imageCount);
+        if(imageCount1 == -1 || imageCount1 == -2 || imageCount1 == -3 ||imageCount1 == -4)
+        {
+            imageCount1 = file.listFiles().length -1;
+        }
 
-    if(flag) {
-        imageCount1 = count -1 ;
-    }
-    else
-    {
-        imageCount1 = imageCount - 1;
-    }
 
-    if(imageCount1 == 0)
-    {
-        imageCount1 = 27;
-        imageCount = 27;
-    }
+
     imagePath1 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount1+"img.jpg";
-
+    imagePath = imagePath1;
     homeDrwable2 = Drawable.createFromPath(imagePath1);
     Log.d("LVMH", "Set thumbnail2 " + imageCount1+"img.jpg");
     runOnUiThread(new Runnable() {
@@ -569,20 +542,17 @@ public void setDrawableImage(int count , boolean flag)
 
         }
     });
+    imageCount2 = imageCount1 - 1 ;
 
-    if(flag) {
-        imageCount2 = count - 2 ;
-    }
-    else
-    {
-        imageCount2 = imageCount - 2;
-    }
 
-    if(imageCount2 == 0)
-    {
-        imageCount2 = 27;
-        imageCount = 27;
-    }
+        if(imageCount2 == -1 || imageCount2 == -2 || imageCount2 == -3 ||imageCount2 == -4)
+        {
+            imageCount2 = file.listFiles().length - 1;
+        }
+
+
+
+
      imagePath2 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount2+"img.jpg";
     Log.d("LVMH", "Set thumbnail3 " + imageCount2+"img.jpg");
     homeDrwable3 = Drawable.createFromPath(imagePath2);
@@ -595,19 +565,15 @@ public void setDrawableImage(int count , boolean flag)
 
         }
     });
+    imageCount3 = imageCount1 - 2 ;
 
-    if(flag) {
-        imageCount3 = count -3 ;
-    }
-    else
-    {
-        imageCount3 = imageCount - 3;
-    }
-    if(imageCount3 == 0)
-    {
-        imageCount3 = 27;
-        imageCount = 27;
-    }
+        if(imageCount3 == -1 || imageCount3 == -2 || imageCount3 == -3 ||imageCount3 == -4)
+        {
+            imageCount3 = file.listFiles().length - 2;
+        }
+
+
+
     imagePath3 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount3+"img.jpg";
     homeDrwable4 = Drawable.createFromPath(imagePath3);
     Log.d("LVMH", "Set thumbnail4 " + imageCount3+"img.jpg");
@@ -747,16 +713,18 @@ public void setDrawableImage(int count , boolean flag)
     }
 
     public  void openGmail(Activity activity,String email, String subject, String content) {
+
+        String gmailImagePath = imagePath;
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.putExtra(Intent.EXTRA_EMAIL, email);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
         emailIntent.setType("text/plain");
         emailIntent.setType("application/image");
 
-        Uri uri = Uri.parse("file://" + imagePath);
+        Uri uri = Uri.parse("file://" + gmailImagePath);
         emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
        // emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(imagePath));
-        Log.d("LVMH","GMAIl Path selected :"+imagePath);
+        Log.d("LVMH","GMAIl Path selected :"+gmailImagePath);
         emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, content);
         final PackageManager pm = activity.getPackageManager();
         final List<ResolveInfo> matches = pm.queryIntentActivities(emailIntent, 0);
@@ -843,18 +811,20 @@ public void setDrawableImage(int count , boolean flag)
         public void run() {
             Socket socket = null;
 
+
             try {
-                serverSocket = new ServerSocket(SocketServerPORT);
+                InetAddress addr = InetAddress.getByName("192.168.8.88");
+                serverSocket = new ServerSocket(SocketServerPORT,50,addr);
 
 
                 while (true) {
                     Log.d("naval", "waiting for connection");
                     socket = serverSocket.accept();
-                    Log.d("naval", "Got connection");
+                    Log.d("LVMH", "Got connection");
                     FileTxThread fileTxThread = new FileTxThread(socket);
-                    Log.d("naval", "created file thread");
+                    Log.d("LVMH", "created file thread");
                     fileTxThread.start();
-                    Log.d("naval", "started file thread");
+                    Log.d("LVMH", "started file thread");
                 }
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -904,28 +874,23 @@ public void setDrawableImage(int count , boolean flag)
                     Log.d("naval", "Mounted");
                 }
 
-
-
-                // Log.d("naval", "Tab file location :" + path);
-
-
                 try {
-                    if(imageCount>=28)// for LVMH we will save only 28 images and then we will replace them
-                        imageCount=1;
+                    if(imageCount>=27)// for LVMH we will save only 27 images and then we will replace them
+                        imageCount=0;
                     fileOutputStream = new FileOutputStream(Environment.getExternalStorageDirectory() + "/lvmh/"+imageCount+"img.jpg");
 
                 }catch (IOException e)
                 {
                     e.printStackTrace();
                 }
-                Log.d("naval", "setting path for file");
+
                 bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-                Log.d("naval-count pic","val"+imageCount);
-                imageCount++;// count increase for file name
+                Log.d("LVMH","Rceiving setting path"+imageCount);
+
 
 
                 //System.out.println("Receiving...");
-                Log.d("naval", "Receiving");
+                Log.d("LVMH", "Receiving");
 
                 //following lines read the input slide file byte by byte
                 bytesRead = inputStream.read(mybytearray, 0, mybytearray.length);
@@ -944,12 +909,16 @@ public void setDrawableImage(int count , boolean flag)
                 //resizeImage(imageCount); // resize the image
                 File file1= new File(android.os.Environment.getExternalStorageDirectory(),"lvmh");
 
-                if( file1.listFiles().length>7)
-                setDrawableImage(imageCount,false);// calleD to populate UI
+
 
                 bufferedOutputStream.flush();
                 bufferedOutputStream.close();
                 inputStream.close();
+
+                if( file1.listFiles().length>3)
+                    setDrawableImage(imageCount,false);// calleD to populate UI
+
+                imageCount++;// count increase for file name
                 //clientSocket.close();
                 //serverSocket.close();
 
