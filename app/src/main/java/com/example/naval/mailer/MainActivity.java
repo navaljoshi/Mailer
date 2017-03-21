@@ -23,11 +23,13 @@ import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -68,6 +70,8 @@ public class MainActivity extends Activity  {
     //Declaring Image View
     public ImageView SharedImg ;
 
+    public  boolean sharingImage = false;
+
     //buttons
 
     public Button shareButton ;
@@ -83,6 +87,7 @@ public class MainActivity extends Activity  {
     public ImageView thumbnail3  ;
     public ImageView more  ;
     public ImageView less  ;
+    public ImageView homeButton  ;
     public Drawable homeDrwabletemp;
     public Drawable homeDrwable2;
     public Drawable homeDrwable3;
@@ -110,7 +115,7 @@ public class MainActivity extends Activity  {
 
  // Sync server variable intializations
   TextView infoIp, infoPort;
- static final int SocketServerPORT = 8880;
+ static final int SocketServerPORT = 8080;
     ServerSocket serverSocket;
 
     ServerSocketThread serverSocketThread;
@@ -149,9 +154,13 @@ public class MainActivity extends Activity  {
         thumbnail3 = (ImageView)findViewById(R.id.img6);
         more = (ImageView)findViewById(R.id.img7);
         less = (ImageView)findViewById(R.id.img8);
+        //homeButton = (ImageView)findViewById(R.id.img9);
+
 
 
 /*=================================== Button Event Listeners =================================================*/
+
+
         shareButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -159,7 +168,7 @@ public class MainActivity extends Activity  {
                 // TODO Auto-generated method stub
 
                 Log.d("LVMH", "share button clicked ");
-
+                sharingImage = true;
                 sharingScreen(); // call funtion to clear screen for FB&GMAIL sharing screen
 
             }
@@ -176,7 +185,12 @@ public class MainActivity extends Activity  {
 
                 //sendEmail(); //funtion to send EMAIl
 
-                openGmail(MainActivity.this,"navaljosh@gmail.com","LVMH","hOW ARE YOU");
+
+                if( haveNetworkConnection())
+                    sendEmail();
+                else
+                    openGmail(MainActivity.this,"navaljosh@gmail.com","LVMH","hOW ARE YOU");
+
 
             }
         });
@@ -190,8 +204,10 @@ public class MainActivity extends Activity  {
 
                 Log.d("LVMH", "FB button clicked ");
 
-                if( haveNetworkConnection())
-                callFB(); // function to FB
+                if( haveNetworkConnection()) {
+                    sharingImage = true; // true while sharing
+                    callFB(); // function to FB
+                }
                 else
                 {
                     //No internet connection here
@@ -269,7 +285,8 @@ public class MainActivity extends Activity  {
                     @Override
                     public void run() {
                         Log.d("LVMH", "Clicked More images , Path: "+ imagePath );
-                            setDrawableImage(imageCount1,true);
+                            setDrawableImageAdd(imageCount3,true);
+                            imageCount3 = imageCount3 +2;
                     }
                 });
             }
@@ -286,11 +303,9 @@ public class MainActivity extends Activity  {
                     @Override
                     public void run() {
                         Log.d("LVMH", "Inside Less images button "+ imagePath );
-                        home.setImageDrawable(homeDrwabletemp);
-                        home.invalidate();
 
-
-                            setDrawableImage(imageCount3,true);
+                        setDrawableImage(imageCount1,true);
+                        imageCount1 = imageCount1 - 2;
 
                     }
                 });
@@ -308,15 +323,19 @@ public class MainActivity extends Activity  {
 
 
     {
+
+        serverSocketThread = new ServerSocketThread();
+        serverSocketThread.start();
+
+        /*
         Log.d("LVMH", "Inside syncServer");
         final AlertDialog alert;
         alert = new AlertDialog.Builder(this).create();
-        alert.setTitle("Alert Dialog With EditText"); //Set Alert dialog title here
-        alert.setMessage("Enter Your Name Here"); //Message here
+
 
         // Set an EditText view to get user input
         alert.setTitle("LVMH Sync Server ");
-        alert.setMessage(" Port:8880 & IP:"+"192.168.8.88");
+        alert.setMessage(" Port:8080 & IP:");
         //alert.setMessage(" press OK to start the Server ");
 
 
@@ -325,8 +344,7 @@ public class MainActivity extends Activity  {
 
         alert.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        serverSocketThread = new ServerSocketThread();
-                        serverSocketThread.start();
+
 
                     }
         });
@@ -338,7 +356,7 @@ public class MainActivity extends Activity  {
             }
         });
 
-        alert.show();
+        alert.show();*/
 
   /*      new Timer().schedule(new TimerTask() {
             @Override
@@ -388,35 +406,22 @@ public class MainActivity extends Activity  {
     // fucntion to move from Home - FB&GMAIL sharing screen
     void sharingScreen()
     {
-        Drawable myDrawable = getResources().getDrawable(R.drawable.backtrans);
-        SharedImg.setImageDrawable(myDrawable);
-        SharedImg.setVisibility(View.VISIBLE);
-      //  SharedImg.setImageDrawable(R.drawable.backtrans);
 
-        SharedImg.animate().translationY(SharedImg.getHeight())
-                        .alpha(0.0f)
-                        .setDuration(3500)
-                        .setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                super.onAnimationEnd(animation);
-                                SharedImg.setVisibility(View.GONE);
-                                more.setVisibility(GONE);
-                                less.setVisibility(View.GONE);
-                                shareButton.setVisibility(GONE);//
+    SharedImg.setVisibility(View.GONE);
+        more.setVisibility(GONE);
+        less.setVisibility(View.GONE);
+        shareButton.setVisibility(GONE);//
 
-                                gallery1.setVisibility(GONE); // gallery button disabled
-                                social.setVisibility(View.VISIBLE); //social buttons enabled
-                                fbButton.setVisibility(View.VISIBLE);
-                                mailButton.setVisibility(View.VISIBLE);
-                            }
-
-    });}
+        gallery1.setVisibility(GONE); // gallery button disabled
+        social.setVisibility(View.VISIBLE); //social buttons enabled
+        fbButton.setVisibility(View.VISIBLE);
+        mailButton.setVisibility(View.VISIBLE);
+    }
 
     // fucntion to move from Home - FB&GMAIL sharing screen
     void homeScreen()
     {
-
+        sharingImage = false ;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -591,6 +596,92 @@ public void setDrawableImage(int count , boolean flag)
 }
 
 
+    public void setDrawableImageAdd(int count , boolean flag)
+    {
+        Log.d("LVMH", "called getDrawableImage" );
+        //lets shake & play music
+        onShakeImage();
+
+        // wait for 5 seconds . so we can decde image
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+            }
+        }, 5000);
+
+        Log.d("LVMH", "Count to start with in setDrawableImageAdd Local:" + count);
+        Log.d("LVMH", "Count to start with in setDrawableImageAdd :" + imageCount);
+        imageCount1 = count ;
+
+        if(imageCount1 == 27 || imageCount1 == 28 || imageCount1 == 29 ||imageCount1 == 30)
+        {
+            imageCount1 = 0;
+        }
+
+
+
+        imagePath1 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount1+"img.jpg";
+        imagePath = imagePath1;
+        homeDrwable2 = Drawable.createFromPath(imagePath1);
+        Log.d("LVMH", "Set thumbnail2 " + imageCount1+"img.jpg");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // Log.d("LVMH", "Set thumbnail2 " );
+                thumbnail1.setImageDrawable(homeDrwable2);
+                home.setImageDrawable(homeDrwable2);
+                more.setVisibility(View.VISIBLE);
+                less.setVisibility(View.VISIBLE);
+                //thumbnail2.invalidate();
+
+            }
+        });
+        imageCount2 = imageCount1 + 1 ;
+
+
+        if(imageCount2 == 27 || imageCount2 == 28 || imageCount2 == 29 ||imageCount2 == 30)
+        {
+            imageCount1 = 0;
+        }
+
+
+
+        imagePath2 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount2+"img.jpg";
+        Log.d("LVMH", "Set thumbnail3 " + imageCount2+"img.jpg");
+        homeDrwable3 = Drawable.createFromPath(imagePath2);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                thumbnail2.setImageDrawable(homeDrwable3);
+                //thumbnail3.invalidate();
+
+            }
+        });
+        imageCount3 = imageCount1 + 2 ;
+
+        if(imageCount3 == 27 || imageCount3 == 28 || imageCount3 == 29 ||imageCount3 == 30)
+        {
+            imageCount3 = 0;
+        }
+
+
+
+        imagePath3 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount3+"img.jpg";
+        homeDrwable4 = Drawable.createFromPath(imagePath3);
+        Log.d("LVMH", "Set thumbnail4 " + imageCount3+"img.jpg");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // Log.d("LVMH", "Set thumbnail4 " );
+                thumbnail3.setImageDrawable(homeDrwable4);
+                //thumbnail3.invalidate();
+
+            }
+        });
+
+
+    }
 
 
     // function for file observer
@@ -714,6 +805,7 @@ public void setDrawableImage(int count , boolean flag)
 
     public  void openGmail(Activity activity,String email, String subject, String content) {
 
+        sharingImage = true; // set true while sharing
         String gmailImagePath = imagePath;
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.putExtra(Intent.EXTRA_EMAIL, email);
@@ -750,6 +842,7 @@ public void setDrawableImage(int count , boolean flag)
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         Log.d("LVMH","GMAIl succes here");
+        sharingImage = false; // set true while sharing
         successSharedScreen();
     }//onActivityResult
 
@@ -785,8 +878,7 @@ public void setDrawableImage(int count , boolean flag)
                     InetAddress inetAddress = enumInetAddress.nextElement();
 
                     if (inetAddress.isSiteLocalAddress()) {
-                        ip += "SiteLocalAddress: "
-                                + inetAddress.getHostAddress() + "\n";
+                        ip += inetAddress.getHostAddress() ;
                     }
 
                 }
@@ -795,10 +887,11 @@ public void setDrawableImage(int count , boolean flag)
 
         } catch (SocketException e) {
             // TODO Auto-generated catch block
+            Log.d("LVMH","issue with IP ");
             e.printStackTrace();
             ip += "Something Wrong! " + e.toString() + "\n";
         }
-
+      //  Log.d("LVMH","IP selected "+ip);
         return ip;
     }
     /*=================================== Button Event Listeners END =================================================*/
@@ -813,16 +906,29 @@ public void setDrawableImage(int count , boolean flag)
 
 
             try {
-                InetAddress addr = InetAddress.getByName("192.168.8.88");
-                serverSocket = new ServerSocket(SocketServerPORT,50,addr);
+                Log.d("LVMH", "IP:"+getIpAddress());
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        Toast.makeText(getApplicationContext(), "Listening on : Port:8880 IP:"+getIpAddress(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+               // InetAddress locIP = InetAddress.getByName(getIpAddress());
+                InetAddress locIP = InetAddress.getByName("192.168.1.10");
+                serverSocket = new ServerSocket(8880, 10, locIP);
 
 
                 while (true) {
-                    Log.d("naval", "waiting for connection");
+                    Log.d("naval", "waiting for connection" );
                     socket = serverSocket.accept();
                     Log.d("LVMH", "Got connection");
                     FileTxThread fileTxThread = new FileTxThread(socket);
-                    Log.d("LVMH", "created file thread");
+
                     fileTxThread.start();
                     Log.d("LVMH", "started file thread");
                 }
@@ -915,8 +1021,11 @@ public void setDrawableImage(int count , boolean flag)
                 bufferedOutputStream.close();
                 inputStream.close();
 
-                if( file1.listFiles().length>3)
-                    setDrawableImage(imageCount,false);// calleD to populate UI
+                // if we are sharing , we will wait .. images will get saved.. will not load .
+                if(sharingImage ==  false) {
+                    if (file1.listFiles().length > 3)
+                        setDrawableImage(imageCount, false);// calleD to populate UI
+                }
 
                 imageCount++;// count increase for file name
                 //clientSocket.close();

@@ -86,17 +86,17 @@
             <ImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/img8"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:src="@drawable/less"
                 android:visibility="gone"
                 android:layout_margin="5dp"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img4"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:src="@drawable/com_facebook_button_login_silver_background"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+
                 app:civ_border_width="2dp"
                 app:civ_border_color="#FF000000"
 
@@ -106,9 +106,9 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/img5"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:src="@drawable/com_facebook_button_login_silver_background"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+
                 app:civ_border_width="2dp"
                 app:civ_border_color="#FF000000"
 
@@ -117,9 +117,9 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/img6"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:src="@drawable/com_facebook_button_login_silver_background"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+
                 app:civ_border_width="2dp"
                 app:civ_border_color="#FF000000"
 
@@ -128,11 +128,11 @@
             <ImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/img7"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:src="@drawable/more"
                 android:visibility="gone"
-                android:layout_margin="5dp"/>s
+                android:layout_margin="15dp"/>
 
         </LinearLayout>
 
@@ -151,7 +151,7 @@
         android:id="@+id/imgShared"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:alpha=".5"/>
+        android:alpha="0.5"/>
 
 </FrameLayout>
 
