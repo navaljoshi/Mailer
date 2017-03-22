@@ -79,6 +79,7 @@ public class MainActivity extends Activity  {
     public Button shareButton ;
     public Button mailButton ;
     public Button fbButton ;
+    //public Button closeButton ;
 
     public LinearLayout gallery2 ;
     public LinearLayout gallery1 ;
@@ -108,6 +109,8 @@ public class MainActivity extends Activity  {
     public int imageCount1;
     public int imageCount2;
     public int imageCount3;
+
+    public final Dialog dialog1 =null ;
 
 
     File file= new File(android.os.Environment.getExternalStorageDirectory(),"lvmh");
@@ -141,11 +144,17 @@ public class MainActivity extends Activity  {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         syncServer(); // calling syncServer to start listening
+
+
+//        setDrawableImage(file.listFiles().length,false);
+
+
         // Intializing Components
         SharedImg = (ImageView)findViewById(R.id.imgShared);
         shareButton = (Button) findViewById(R.id.btshr);
         mailButton = (Button) findViewById(R.id.btGmail);
         fbButton = (Button) findViewById(R.id.btFacebook);
+
         //gallery  = (LinearLayout) findViewById(R.id.linGal);
         gallery1 = (LinearLayout) findViewById(R.id.linGal1);
         gallery2 = (LinearLayout) findViewById(R.id.linShare);
@@ -176,6 +185,8 @@ public class MainActivity extends Activity  {
 
             }
         });
+
+
 
 
         mailButton.setOnClickListener(new View.OnClickListener() {
@@ -317,7 +328,7 @@ public class MainActivity extends Activity  {
                 });
             }
         });
-
+        setDrawableImage(file.listFiles().length -1,true);
 
     }
 /*=================================== Button Event Listeners =================================================*/
@@ -413,10 +424,11 @@ public class MainActivity extends Activity  {
     void sharingScreen()
     {
 
-    SharedImg.setVisibility(View.GONE);
+        SharedImg.setVisibility(View.GONE);
         more.setVisibility(GONE);
         less.setVisibility(View.GONE);
         shareButton.setVisibility(GONE);//
+//        closeButton.setVisibility(View.VISIBLE);
 
         gallery1.setVisibility(GONE); // gallery button disabled
         social.setVisibility(View.VISIBLE); //social buttons enabled
@@ -520,8 +532,12 @@ public void setDrawableImage(int count , boolean flag)
 {
     Log.d("LVMH", "called getDrawableImage" );
     //lets shake & play music
-     onShakeImage();
-
+    if(flag)
+    {
+        // do not shake
+    }else {
+        onShakeImage();
+    }
    // wait for 5 seconds . so we can decde image
     new Timer().schedule(new TimerTask() {
         @Override
@@ -609,7 +625,12 @@ public void setDrawableImage(int count , boolean flag)
     {
         Log.d("LVMH", "called getDrawableImage" );
         //lets shake & play music
-        onShakeImage();
+        if(flag)
+        {
+            // do not shake
+        }else {
+            onShakeImage();
+        }
 
         // wait for 5 seconds . so we can decde image
         new Timer().schedule(new TimerTask() {
@@ -770,6 +791,23 @@ public void setDrawableImage(int count , boolean flag)
         editTextEmail = (EditText) dialog1.findViewById(R.id.editTextMail);
         editTextName = (EditText) dialog1.findViewById(R.id.editTextName);
 
+        final Button closeButton = (Button) dialog1.findViewById(R.id.btClose);
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+
+                Log.d("LVMH", "close button clicked ");
+
+                //closeButton.setVisibility(GONE);
+                dialog1.dismiss();
+                sharingScreen();
+
+            }
+        });
+
 
         mail.setOnClickListener(new View.OnClickListener() {
 
@@ -853,9 +891,16 @@ public void setDrawableImage(int count , boolean flag)
         Log.d("LVMH","GMAIl succes here");
 
         successSharedScreen();
+
     }//onActivityResult
 
 
+    @Override
+    public void onBackPressed() {
+
+
+        return;
+    }
 
     @Override
     protected void onDestroy() {

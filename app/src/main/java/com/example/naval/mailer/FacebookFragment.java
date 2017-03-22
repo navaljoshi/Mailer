@@ -171,8 +171,8 @@ public class FacebookFragment extends Fragment {
             public void onCancel() {
                 // App code
                 if (pendingAction != PendingAction.NONE) {
-                    showAlert();
-                    pendingAction = PendingAction.NONE;
+                    //showAlert();
+                    //pendingAction = PendingAction.NONE;
                 }
                 updateUI();
             }
@@ -519,12 +519,9 @@ public class FacebookFragment extends Fragment {
 
                 Bitmap resized = Bitmap.createScaledBitmap(result,200,200, true);
                 bmImage.setImageBitmap(ImageHelper.getRoundedCornerBitmap(getContext(),resized,250,200,200, false, false, false, false));
-
             }
         }
     }
-
-
 }
 
 
