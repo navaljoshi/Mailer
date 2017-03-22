@@ -39,8 +39,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.crashlytics.android.Crashlytics;
 import com.romainpiel.titanic.library.TitanicTextView;
 
+import io.fabric.sdk.android.Fabric;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -134,6 +136,7 @@ public class MainActivity extends Activity  {
 
         Log.d("LVMH","Image count on start :"+imageCount);
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
@@ -211,8 +214,11 @@ public class MainActivity extends Activity  {
                 else
                 {
                     //No internet connection here
-                    Toast.makeText(getApplicationContext(), "No Internet Connection , Please Try Later or try Offline Mail",
+                    Toast.makeText(getApplicationContext(), "No Internet Connection , Please Try Later or try offline Mail",
                             Toast.LENGTH_LONG).show();
+
+                    homeScreen();
+
                 }
             }
         });
@@ -386,7 +392,7 @@ public class MainActivity extends Activity  {
                 image.setAnimation(animShake);
 
                 // now play music too
-                audioPlayer();
+               // audioPlayer();
 
             }
         });
@@ -459,6 +465,9 @@ public class MainActivity extends Activity  {
 
             }
         });
+
+          sharingImage = false;
+
 
           new Timer().schedule(new TimerTask() {
               @Override
@@ -805,7 +814,7 @@ public void setDrawableImage(int count , boolean flag)
 
     public  void openGmail(Activity activity,String email, String subject, String content) {
 
-        sharingImage = true; // set true while sharing
+
         String gmailImagePath = imagePath;
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.putExtra(Intent.EXTRA_EMAIL, email);
@@ -842,7 +851,7 @@ public void setDrawableImage(int count , boolean flag)
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         Log.d("LVMH","GMAIl succes here");
-        sharingImage = false; // set true while sharing
+
         successSharedScreen();
     }//onActivityResult
 
@@ -918,8 +927,8 @@ public void setDrawableImage(int count , boolean flag)
                 });
 
 
-               // InetAddress locIP = InetAddress.getByName(getIpAddress());
-                InetAddress locIP = InetAddress.getByName("192.168.1.10");
+                //InetAddress locIP = InetAddress.getByName("192.168.1.88");
+                 InetAddress locIP = InetAddress.getByName(getIpAddress());
                 serverSocket = new ServerSocket(8880, 10, locIP);
 
 
