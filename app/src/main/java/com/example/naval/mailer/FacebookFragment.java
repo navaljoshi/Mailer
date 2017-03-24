@@ -72,6 +72,8 @@ public class FacebookFragment extends Fragment {
     private FacebookCallback<Sharer.Result> shareCallback = new FacebookCallback<Sharer.Result>() {
         @Override
         public void onCancel() {
+            getActivity().finish();//chance vaibhav
+
             Log.d("FacebookFragment", "Canceled");
         }
 
@@ -99,6 +101,9 @@ public class FacebookFragment extends Fragment {
                 // showResult(title, alertMessage);
                 Log.d("naval"," onSuccess");
                 getActivity().finish();//chance vaibhav
+
+
+
             }
         }
 
@@ -171,9 +176,18 @@ public class FacebookFragment extends Fragment {
             public void onCancel() {
                 // App code
                 if (pendingAction != PendingAction.NONE) {
-                    //showAlert();
-                    //pendingAction = PendingAction.NONE;
+                    showAlert();
+                    pendingAction = PendingAction.NONE;
+                    getActivity().finish();//chance vaibhav
+
                 }
+                getActivity().finish();//chance vaibhav
+
+                MainActivity.fbFlagCancel = true;
+
+
+
+
                 updateUI();
             }
 

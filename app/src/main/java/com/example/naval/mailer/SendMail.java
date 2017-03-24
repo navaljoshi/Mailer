@@ -131,11 +131,11 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL));
             message.addRecipient(Message.RecipientType.TO,new InternetAddress(email));
-            message.setSubject("Your Image is here -LVMH");
+            message.setSubject("Glenmorangie ");
 
             //3) create MimeBodyPart object and set your message text
             BodyPart messageBodyPart1 = new MimeBodyPart();
-            messageBodyPart1.setText("Hello,"+subject+",Here is your image from LVMH");
+            messageBodyPart1.setText("Hello,"+subject+", It was nice having you @ LVMH. Here is your image .");
 
             //4) create new MimeBodyPart object and set DataHandler object to this object
             MimeBodyPart messageBodyPart2 = new MimeBodyPart();

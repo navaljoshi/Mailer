@@ -24,6 +24,7 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -73,6 +74,7 @@ public class MainActivity extends Activity  {
     public ImageView SharedImg ;
 
     public  boolean sharingImage = false;
+    public  static boolean fbFlagCancel = false;
 
     //buttons
 
@@ -171,6 +173,33 @@ public class MainActivity extends Activity  {
 
 
 /*=================================== Button Event Listeners =================================================*/
+
+        View view = getWindow().getDecorView();
+        view.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View view, MotionEvent event) {
+                switch(event.getAction()) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        // The user just touched the screen
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        // The touch just ended
+
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                // this code will be executed after 2 seconds
+                                homeScreen();
+                            }
+                        }, 60000);
+
+                        break;
+                }
+
+                return false;
+            }
+        });
 
 
         shareButton.setOnClickListener(new View.OnClickListener() {
@@ -423,17 +452,23 @@ public class MainActivity extends Activity  {
     // fucntion to move from Home - FB&GMAIL sharing screen
     void sharingScreen()
     {
-
-        SharedImg.setVisibility(View.GONE);
-        more.setVisibility(GONE);
-        less.setVisibility(View.GONE);
-        shareButton.setVisibility(GONE);//
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("LVMH", "called sharingScreen");
+                SharedImg.setVisibility(View.GONE);
+                more.setVisibility(GONE);
+                less.setVisibility(View.GONE);
+                shareButton.setVisibility(GONE);//
 //        closeButton.setVisibility(View.VISIBLE);
 
-        gallery1.setVisibility(GONE); // gallery button disabled
-        social.setVisibility(View.VISIBLE); //social buttons enabled
-        fbButton.setVisibility(View.VISIBLE);
-        mailButton.setVisibility(View.VISIBLE);
+                gallery1.setVisibility(GONE); // gallery button disabled
+                social.setVisibility(View.VISIBLE); //social buttons enabled
+                fbButton.setVisibility(View.VISIBLE);
+                mailButton.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
     // fucntion to move from Home - FB&GMAIL sharing screen
@@ -443,7 +478,11 @@ public class MainActivity extends Activity  {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.d("LVMH", "Set Main Image and thumbnail 3"+ imagePath );
+                Log.d("LVMH", "homeScreen"+ imagePath );
+
+                social.setVisibility(View.GONE); //social buttons enabled
+                fbButton.setVisibility(View.GONE);
+                mailButton.setVisibility(View.GONE);
              //   txtView.setVisibility(View.VISIBLE);
                 shareButton.setVisibility(View.VISIBLE);
                 SharedImg.setVisibility(View.GONE);
@@ -647,7 +686,10 @@ public void setDrawableImage(int count , boolean flag)
         {
             imageCount1 = 0;
         }
-
+        if(imageCount3 == -1 || imageCount3 == -2 || imageCount3 == -3 ||imageCount3 == -4)
+        {
+            imageCount3 = file.listFiles().length - 2;
+        }
 
 
         imagePath1 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount1+"img.jpg";
@@ -888,9 +930,15 @@ public void setDrawableImage(int count , boolean flag)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.d("LVMH","GMAIl succes here");
+        //Log.d("LVMH","GMAIl succes here");
 
-        successSharedScreen();
+        if(fbFlagCancel)
+        {
+// no sucess screen shared , intiated in FacebookFragment.java
+        }
+        else {
+            successSharedScreen();
+        }
 
     }//onActivityResult
 
