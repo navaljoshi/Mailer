@@ -19,6 +19,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.FileObserver;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 
@@ -81,6 +82,7 @@ public class MainActivity extends Activity  {
     public Button shareButton ;
     public Button mailButton ;
     public Button fbButton ;
+    public Button closeBtn;
     //public Button closeButton ;
 
     public LinearLayout gallery2 ;
@@ -155,6 +157,7 @@ public class MainActivity extends Activity  {
         SharedImg = (ImageView)findViewById(R.id.imgShared);
         shareButton = (Button) findViewById(R.id.btshr);
         mailButton = (Button) findViewById(R.id.btGmail);
+        closeBtn = (Button) findViewById(R.id.btClose1);
         fbButton = (Button) findViewById(R.id.btFacebook);
 
         //gallery  = (LinearLayout) findViewById(R.id.linGal);
@@ -357,6 +360,24 @@ public class MainActivity extends Activity  {
                 });
             }
         });
+
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Your code.
+
+
+                homeDrwabletemp = Drawable.createFromPath(imagePath6);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("LVMH", "clicked close button  "+ imagePath );
+
+                 homeScreen();
+
+                    }
+                });
+            }
+        });
         setDrawableImage(file.listFiles().length -1,true);
 
     }
@@ -460,6 +481,7 @@ public class MainActivity extends Activity  {
                 more.setVisibility(GONE);
                 less.setVisibility(View.GONE);
                 shareButton.setVisibility(GONE);//
+                closeBtn.setVisibility(View.VISIBLE);
 //        closeButton.setVisibility(View.VISIBLE);
 
                 gallery1.setVisibility(GONE); // gallery button disabled
@@ -483,6 +505,7 @@ public class MainActivity extends Activity  {
                 social.setVisibility(View.GONE); //social buttons enabled
                 fbButton.setVisibility(View.GONE);
                 mailButton.setVisibility(View.GONE);
+                closeBtn.setVisibility(GONE);
              //   txtView.setVisibility(View.VISIBLE);
                 shareButton.setVisibility(View.VISIBLE);
                 SharedImg.setVisibility(View.GONE);
@@ -506,6 +529,7 @@ public class MainActivity extends Activity  {
             @Override
             public void run() {
                 Log.d("LVMH", "successSharedScreen"+ imagePath );
+                closeBtn.setVisibility(GONE);
                 social.setVisibility(View.GONE); //social buttons enabled
                 fbButton.setVisibility(View.GONE);
                 mailButton.setVisibility(View.GONE);
@@ -866,7 +890,8 @@ public void setDrawableImage(int count , boolean flag)
                 String message = "";
 
                 //Creating SendMail object
-                SendMail sm = new SendMail(getWindow().getContext(), email, subject, message);
+                final SendMail sm = new SendMail(getWindow().getContext(), email, subject, message);
+
 
                 //Executing send mail to send email
                 sm.execute();
@@ -874,15 +899,21 @@ public void setDrawableImage(int count , boolean flag)
                 dialog1.dismiss();// dismiss dialog and remove buttons
 
 
-                // timer here to wait
 
-                new Timer().schedule(new TimerTask() {
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        // this code will be executed after 2 seconds
-                        successSharedScreen();
-                    }
-                }, 15000);
+                        if (sm.mailSent != true) {
+                            handler.postDelayed(this, 1000);
+                        }
+                            else{
+                                successSharedScreen();
+                            }
+                        }
+
+                }, 1000);
 
 
 
@@ -917,8 +948,6 @@ public void setDrawableImage(int count , boolean flag)
             emailIntent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
 
         //activity.startActivity(emailIntent);
-
-
         startActivityForResult(emailIntent, 1);
 
 

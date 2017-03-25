@@ -46,11 +46,12 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
     //Declaring Variables
     private Context context;
     private Session session;
+    public boolean mailSent = false ;
 
     //Information to send email
     private String email;
     private String subject;
-    private String message;
+    private   String message;
 
     //Progressdialog to show while sending email
     private ProgressDialog progressDialog;
@@ -62,6 +63,7 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
         this.email = email;
         this.subject = subject;
         this.message = message;
+        mailSent = false;
     }
 
     @Override
@@ -79,6 +81,8 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
         //Showing a success message
         Toast.makeText(context,"Message Sent",Toast.LENGTH_LONG).show();
 
+
+        mailSent = true;
         // move the screen to shared screen
         //close keyboard
         Log.d("LVMH","Mail sent ");
@@ -135,7 +139,7 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
 
             //3) create MimeBodyPart object and set your message text
             BodyPart messageBodyPart1 = new MimeBodyPart();
-            messageBodyPart1.setText("Hello,"+subject+", It was nice having you @ LVMH. Here is your image .");
+            messageBodyPart1.setText("Hello,"+subject+", It was nice having you at MHI interactive installation Mumbai. Here is your image .");
 
             //4) create new MimeBodyPart object and set DataHandler object to this object
             MimeBodyPart messageBodyPart2 = new MimeBodyPart();

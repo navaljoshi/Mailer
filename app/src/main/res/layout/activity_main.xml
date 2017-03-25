@@ -21,18 +21,17 @@
 
     <ImageView
         android:layout_width="563dp"
-        android:layout_height="590dp"
+        android:layout_height="630dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="243dp"
+        android:layout_marginTop="220dp"
         android:layout_marginBottom="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="20dp"
         android:visibility="visible"
         android:contentDescription="MainImages"
         android:adjustViewBounds="true"
-
         android:background="#000000"
-        android:padding="10dp"
+
         android:id="@+id/imgHome" />
 
     <LinearLayout
@@ -41,21 +40,20 @@
         android:orientation="vertical"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="160dp"
         android:id="@+id/linSocial">
         <Button
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/facebook"
-            android:layout_marginBottom="10dp"
             android:id="@+id/btFacebook"
             android:visibility="gone" />
         <Button
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-20dp"
             android:background="@drawable/gmaillogo"
             android:id="@+id/btGmail"
+            android:layout_marginTop="-80dp"
             android:visibility="gone"/>
 
     </LinearLayout>
@@ -77,7 +75,9 @@
             android:background="@drawable/share"
             android:gravity="center"
             android:layout_marginBottom="25dp"
-            android:id="@+id/btshr" />
+            android:id="@+id/btshr"
+            />
+
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -88,21 +88,21 @@
             <ImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/img8"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:src="@drawable/less"
                 android:visibility="gone"
-                android:layout_margin="5dp"/>
+                android:layout_margin="35dp"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img4"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
 
-                app:civ_border_width="2dp"
-                app:civ_border_color="#FF000000"
+                app:civ_border_width="4dp"
+                app:civ_border_color="#FFFFFF"
 
-                android:layout_margin="15dp"
+                android:layout_margin="10dp"
                 />
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -111,10 +111,10 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
 
-                app:civ_border_width="2dp"
-                app:civ_border_color="#FF000000"
+                app:civ_border_width="4dp"
+                app:civ_border_color="#FFFFFF"
 
-                android:layout_margin="15dp"/>
+                android:layout_margin="10dp"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -122,25 +122,35 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
 
-                app:civ_border_width="2dp"
-                app:civ_border_color="#FF000000"
+                app:civ_border_width="4dp"
+                app:civ_border_color="#FFFFFF"
 
-                android:layout_margin="15dp"/>
+                android:layout_margin="10dp"/>
 
             <ImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/img7"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:src="@drawable/more"
                 android:visibility="gone"
-                android:layout_margin="15dp"/>
+                android:layout_margin="35dp"/>
 
         </LinearLayout>
 
 
 
     </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/close1"
+        android:layout_marginLeft="340dp"
+        android:layout_marginTop="1090dp"
+        android:layout_marginBottom="25dp"
+        android:visibility="gone"
+        android:id="@+id/btClose1" />
 
 </RelativeLayout>
 
@@ -154,6 +164,8 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:alpha="0.5"/>
+
+
 
 
 </FrameLayout>
