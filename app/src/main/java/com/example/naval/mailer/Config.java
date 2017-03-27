@@ -5,6 +5,6 @@ package com.example.naval.mailer;
  */
 
 public class Config {
-    public static final String EMAIL ="mhiarmumbai@gmail.com";
+    public static final String EMAIL ="mhiarbangalore@gmail.com";
     public static final String PASSWORD ="up14y7434";
 }

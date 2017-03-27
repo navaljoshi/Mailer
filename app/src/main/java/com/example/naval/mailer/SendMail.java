@@ -135,11 +135,14 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL));
             message.addRecipient(Message.RecipientType.TO,new InternetAddress(email));
-            message.setSubject("Glenmorangie ");
+            message.setSubject("You images from Glenmorangie Augmented Reality Experience!");
 
             //3) create MimeBodyPart object and set your message text
             BodyPart messageBodyPart1 = new MimeBodyPart();
-            messageBodyPart1.setText("Hello,"+subject+", It was nice having you at MHI interactive installation Mumbai. Here is your image .");
+            messageBodyPart1.setText("Hello "+ subject+", \n\n It was great having you at the Glenmorangie Augmented Reality experience zone.\n" +
+                      "Please find you images attached .\n\n\n"+
+                                               "Best\n" +
+                                               "Team Glenmornagie .");
 
             //4) create new MimeBodyPart object and set DataHandler object to this object
             MimeBodyPart messageBodyPart2 = new MimeBodyPart();
@@ -165,8 +168,6 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
             System.out.println("message sent....");
 
             // call function from Main activity to gotto final sxreen
-
-
         }catch (MessagingException ex) {ex.printStackTrace();}
    return null;
 }

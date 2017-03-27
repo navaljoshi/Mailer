@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +18,8 @@ import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.os.Handler;
@@ -115,12 +118,16 @@ public class MainActivity extends Activity  {
     public int imageCount3;
 
     public final Dialog dialog1 =null ;
+    private static Context context;
 
 
     File file= new File(android.os.Environment.getExternalStorageDirectory(),"lvmh");
     public int imageCount = file.listFiles().length;
 
 
+    public static Context getAppContext() {
+        return MainActivity.context;
+    }
 
  // Sync server variable intializations
   TextView infoIp, infoPort;
@@ -143,6 +150,7 @@ public class MainActivity extends Activity  {
 
         Log.d("LVMH","Image count on start :"+imageCount);
         super.onCreate(savedInstanceState);
+        MainActivity.context = getApplicationContext();
         Fabric.with(this, new Crashlytics());
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -192,10 +200,10 @@ public class MainActivity extends Activity  {
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
-                                // this code will be executed after 2 seconds
+                                // this code will be executed after 100 seconds
                                 homeScreen();
                             }
-                        }, 60000);
+                        }, 100000);
 
                         break;
                 }
@@ -235,12 +243,15 @@ public class MainActivity extends Activity  {
                 if( haveNetworkConnection())
                     sendEmail();
                 else
-                    openGmail(MainActivity.this,"navaljosh@gmail.com","LVMH","hOW ARE YOU");
+                    openGmail(MainActivity.this,"mhiarmumbai@gmail.com","You images from Glenmorangie Augmented Reality Experience!","\n It was great having you at the Glenmorangie Augmented Reality experience zone.\n" +
+                            "Please find you images attached .\n" +
+                            "\n" +
+                            "Best\n" +
+                            "Team Glenmornagie");
 
 
             }
         });
-
 
         fbButton.setOnClickListener(new View.OnClickListener() {
 
@@ -248,7 +259,7 @@ public class MainActivity extends Activity  {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
 
-                Log.d("LVMH", "FB button clicked ");
+
 
                 if( haveNetworkConnection()) {
                     sharingImage = true; // true while sharing
@@ -550,7 +561,7 @@ public class MainActivity extends Activity  {
                   // this code will be executed after 2 seconds
                   homeScreen();
               }
-          }, 10000);
+          }, 5000);
 
 
 
@@ -687,6 +698,11 @@ public void setDrawableImage(int count , boolean flag)
     public void setDrawableImageAdd(int count , boolean flag)
     {
         Log.d("LVMH", "called getDrawableImage" );
+
+        if(imageCount == file.listFiles().length)
+        {
+          count  = 0;
+        }
         //lets shake & play music
         if(flag)
         {
@@ -700,7 +716,7 @@ public void setDrawableImage(int count , boolean flag)
             @Override
             public void run() {
             }
-        }, 5000);
+        }, 2000);
 
         Log.d("LVMH", "Count to start with in setDrawableImageAdd Local:" + count);
         Log.d("LVMH", "Count to start with in setDrawableImageAdd :" + imageCount);
@@ -970,6 +986,7 @@ public void setDrawableImage(int count , boolean flag)
         }
 
     }//onActivityResult
+
 
 
     @Override

@@ -92,7 +92,7 @@ public class FacebookFragment extends Fragment {
             if (result.getPostId() != null) {
                 String title = getString(R.string.success);
                 progressdialog.dismiss();
-                Toast.makeText(getActivity(), "Post successfully shared.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "You are Signed Out from FB !!.", Toast.LENGTH_LONG).show();
 
                 // getView().getParent()
 
