@@ -157,6 +157,22 @@ public class MainActivity extends Activity  {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
+
+        final PendingIntent intent = PendingIntent.getActivity(getApplication(), 0,
+                new Intent(getIntent()), PendingIntent.FLAG_CANCEL_CURRENT);
+        syncServer(); // calling syncServer to start listening
+        final Thread.UncaughtExceptionHandler defaultHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            public void uncaughtException(Thread thread, Throwable ex) {
+                AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 2000, intent);
+                System.exit(2);
+                defaultHandler.uncaughtException(thread, ex);
+            }
+        });
+
+
         syncServer(); // calling syncServer to start listening
 
 
@@ -165,6 +181,7 @@ public class MainActivity extends Activity  {
 
         // Intializing Components
         SharedImg = (ImageView)findViewById(R.id.imgShared);
+        //SharedImg = null;
         shareButton = (Button) findViewById(R.id.btshr);
         mailButton = (Button) findViewById(R.id.btGmail);
         closeBtn = (Button) findViewById(R.id.btClose1);
@@ -241,6 +258,15 @@ public class MainActivity extends Activity  {
                 Log.d("LVMH", "MAIL button clicked ");
 
                 //sendEmail(); //funtion to send EMAIl
+
+                new InternetUtil().getSpeed(new AsyncResponse() {
+                    @Override
+                    public double getSpeed(double speed) {
+                        double sp = speed;
+                        Log.d("lvmh","speed:"+String.valueOf(sp));
+                        return 0;
+                    }
+                });
 
 
                 if( haveNetworkConnection())
@@ -610,93 +636,92 @@ public void resizeImage(int imageCount)
 
 public void setDrawableImage(int count , boolean flag)
 {
-    Log.d("LVMH", "called getDrawableImage" );
-    //lets shake & play music
-    if(flag)
-    {
-        // do not shake
-    }else {
-        onShakeImage();
-    }
-   // wait for 5 seconds . so we can decde image
-    new Timer().schedule(new TimerTask() {
-        @Override
-        public void run() {
-        }
-    }, 5000);
 
-    Log.d("LVMH", "Count to start with in setDrawableImage Local:" + count);
-    Log.d("LVMH", "Count to start with in setDrawableImage :" + imageCount);
-    imageCount1 = count ;
+   try {
+       Log.d("LVMH", "called getDrawableImage");
 
-        if(imageCount1 == -1 || imageCount1 == -2 || imageCount1 == -3 ||imageCount1 == -4)
-        {
-            imageCount1 = file.listFiles().length -1;
-        }
+       //lets shake & play music
+       if (flag) {
+           // do not shake
+       } else {
+           onShakeImage();
+       }
+       // wait for 5 seconds . so we can decde image
+       new Timer().schedule(new TimerTask() {
+           @Override
+           public void run() {
+           }
+       }, 5000);
 
+       Log.d("LVMH", "Count to start with in setDrawableImage Local:" + count);
+       Log.d("LVMH", "Count to start with in setDrawableImage :" + imageCount);
+       imageCount1 = count;
 
-
-    imagePath1 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount1+"img.jpg";
-    imagePath = imagePath1;
-    homeDrwable2 = Drawable.createFromPath(imagePath1);
-    Log.d("LVMH", "Set thumbnail2 " + imageCount1+"img.jpg");
-    runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-           // Log.d("LVMH", "Set thumbnail2 " );
-            thumbnail1.setImageDrawable(homeDrwable2);
-            home.setImageDrawable(homeDrwable2);
-            more.setVisibility(View.VISIBLE);
-            less.setVisibility(View.VISIBLE);
-            //thumbnail2.invalidate();
-
-        }
-    });
-    imageCount2 = imageCount1 - 1 ;
+       if (imageCount1 == -1 || imageCount1 == -2 || imageCount1 == -3 || imageCount1 == -4) {
+           imageCount1 = file.listFiles().length - 1;
+       }
 
 
-        if(imageCount2 == -1 || imageCount2 == -2 || imageCount2 == -3 ||imageCount2 == -4)
-        {
-            imageCount2 = file.listFiles().length - 1;
-        }
+       imagePath1 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" + imageCount1 + "img.jpg";
+       imagePath = imagePath1;
+       homeDrwable2 = Drawable.createFromPath(imagePath1);
+       Log.d("LVMH", "Set thumbnail2 " + imageCount1 + "img.jpg");
+       runOnUiThread(new Runnable() {
+           @Override
+           public void run() {
+               // Log.d("LVMH", "Set thumbnail2 " );
+               thumbnail1.setImageDrawable(homeDrwable2);
+               home.setImageDrawable(homeDrwable2);
+               more.setVisibility(View.VISIBLE);
+               less.setVisibility(View.VISIBLE);
+               //thumbnail2.invalidate();
+
+           }
+       });
+       imageCount2 = imageCount1 - 1;
 
 
+       if (imageCount2 == -1 || imageCount2 == -2 || imageCount2 == -3 || imageCount2 == -4) {
+           imageCount2 = file.listFiles().length - 1;
+       }
 
 
-     imagePath2 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount2+"img.jpg";
-    Log.d("LVMH", "Set thumbnail3 " + imageCount2+"img.jpg");
-    homeDrwable3 = Drawable.createFromPath(imagePath2);
-    runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
+       imagePath2 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" + imageCount2 + "img.jpg";
+       Log.d("LVMH", "Set thumbnail3 " + imageCount2 + "img.jpg");
+       homeDrwable3 = Drawable.createFromPath(imagePath2);
+       runOnUiThread(new Runnable() {
+           @Override
+           public void run() {
 
-            thumbnail2.setImageDrawable(homeDrwable3);
-            //thumbnail3.invalidate();
+               thumbnail2.setImageDrawable(homeDrwable3);
+               //thumbnail3.invalidate();
 
-        }
-    });
-    imageCount3 = imageCount1 - 2 ;
+           }
+       });
+       imageCount3 = imageCount1 - 2;
 
-        if(imageCount3 == -1 || imageCount3 == -2 || imageCount3 == -3 ||imageCount3 == -4)
-        {
-            imageCount3 = file.listFiles().length - 2;
-        }
-
+       if (imageCount3 == -1 || imageCount3 == -2 || imageCount3 == -3 || imageCount3 == -4) {
+           imageCount3 = file.listFiles().length - 2;
+       }
 
 
-    imagePath3 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" +imageCount3+"img.jpg";
-    homeDrwable4 = Drawable.createFromPath(imagePath3);
-    Log.d("LVMH", "Set thumbnail4 " + imageCount3+"img.jpg");
-    runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-           // Log.d("LVMH", "Set thumbnail4 " );
-            thumbnail3.setImageDrawable(homeDrwable4);
-            //thumbnail3.invalidate();
+       imagePath3 = Environment.getExternalStorageDirectory().toString() + "/lvmh/" + imageCount3 + "img.jpg";
+       homeDrwable4 = Drawable.createFromPath(imagePath3);
+       Log.d("LVMH", "Set thumbnail4 " + imageCount3 + "img.jpg");
+       runOnUiThread(new Runnable() {
+           @Override
+           public void run() {
+               // Log.d("LVMH", "Set thumbnail4 " );
+               thumbnail3.setImageDrawable(homeDrwable4);
+               //thumbnail3.invalidate();
 
-        }
-    });
-
+           }
+       });
+   }
+   catch (Exception e)
+   {
+       e.printStackTrace();
+   }
 
 }
 
@@ -818,9 +843,12 @@ public void setDrawableImage(int count , boolean flag)
                         Log.d("LVMH -  ", path);
                     File file = new File(android.os.Environment.getExternalStorageDirectory(), "Lvmh");
 
-
-                        setDrawableImage(file.listFiles().length,false);
-
+try {
+    setDrawableImage(file.listFiles().length, false);
+}catch (OutOfMemoryError e)
+{
+    e.printStackTrace();
+}
                     }
                 }
         };
@@ -832,6 +860,9 @@ public void setDrawableImage(int count , boolean flag)
     public boolean haveNetworkConnection() {
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;
+        int spd ;
+
+
 
 
         ConnectivityManager cm = (ConnectivityManager) getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
@@ -1177,8 +1208,13 @@ public void setDrawableImage(int count , boolean flag)
 
                 // if we are sharing , we will wait .. images will get saved.. will not load .
                 if(sharingImage ==  false) {
-                    if (file1.listFiles().length > 3)
-                        setDrawableImage(imageCount, false);// calleD to populate UI
+                    try {
+                        if (file1.listFiles().length > 3)
+                            setDrawableImage(imageCount, false);// calleD to populate UI
+                    }catch (OutOfMemoryError e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
 
                 imageCount++;// count increase for file name

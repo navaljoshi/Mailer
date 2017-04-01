@@ -1,6 +1,9 @@
 package com.example.naval.mailer;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -129,6 +132,17 @@ public class FacebookFragment extends Fragment {
         FacebookSdk.sdkInitialize(getActivity());
         Log.d("naval"," onCreate");
         // Other app specific specialization
+        final PendingIntent intent = PendingIntent.getActivity(getActivity().getApplication(), 0,
+                new Intent(getActivity().getIntent()), PendingIntent.FLAG_CANCEL_CURRENT);
+        final Thread.UncaughtExceptionHandler defaultHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            public void uncaughtException(Thread thread, Throwable ex) {
+                AlarmManager mgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 2000, intent);
+                System.exit(2);
+                defaultHandler.uncaughtException(thread, ex);
+            }
+        });
     }
 
     @Override
