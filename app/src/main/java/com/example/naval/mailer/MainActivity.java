@@ -4,7 +4,9 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -180,6 +182,7 @@ public class MainActivity extends Activity  {
         more = (ImageView)findViewById(R.id.img7);
         less = (ImageView)findViewById(R.id.img8);
         //homeButton = (ImageView)findViewById(R.id.img9);
+
 
 
 
@@ -392,6 +395,9 @@ public class MainActivity extends Activity  {
         setDrawableImage(file.listFiles().length -1,true);
 
     }
+
+
+
 /*=================================== Button Event Listeners =================================================*/
 
 
