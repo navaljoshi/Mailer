@@ -5,5 +5,5 @@ package com.example.naval.mailer;
  */
 
 public interface AsyncResponse {
-    public double getSpeed(double speed);
+    public double getSpeed(long speed);
 }

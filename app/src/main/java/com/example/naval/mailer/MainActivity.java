@@ -249,6 +249,7 @@ public class MainActivity extends Activity  {
 
 
 
+
         mailButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -258,25 +259,37 @@ public class MainActivity extends Activity  {
                 Log.d("LVMH", "MAIL button clicked ");
 
                 //sendEmail(); //funtion to send EMAIl
-
                 new InternetUtil().getSpeed(new AsyncResponse() {
                     @Override
-                    public double getSpeed(double speed) {
-                        double sp = speed;
-                        Log.d("lvmh","speed:"+String.valueOf(sp));
+                    public double getSpeed(long speed) {
+                        long sp = speed;
+                        Log.d("lvmh","GMAIL speed:"+String.valueOf(sp));
+
+                        if( haveNetworkConnection()) {
+                            if(sp>500) {
+                                sendEmail();
+                            }else
+                            {
+                                openGmail(MainActivity.this,"mhiarmumbai@gmail.com","You images from Glenmorangie Augmented Reality Experience!","\n It was great having you at the Glenmorangie Augmented Reality experience zone.\n" +
+                                        "Please find you images attached .\n" +
+                                        "\n" +
+                                        "Best\n" +
+                                        "Team Glenmornagie");
+                            }
+                        }
+                        else {
+                            openGmail(MainActivity.this, "mhiarmumbai@gmail.com", "You images from Glenmorangie Augmented Reality Experience!", "\n It was great having you at the Glenmorangie Augmented Reality experience zone.\n" +
+                                    "Please find you images attached .\n" +
+                                    "\n" +
+                                    "Best\n" +
+                                    "Team Glenmornagie");
+                        }
                         return 0;
                     }
                 });
 
 
-                if( haveNetworkConnection())
-                    sendEmail();
-                else
-                    openGmail(MainActivity.this,"mhiarmumbai@gmail.com","You images from Glenmorangie Augmented Reality Experience!","\n It was great having you at the Glenmorangie Augmented Reality experience zone.\n" +
-                            "Please find you images attached .\n" +
-                            "\n" +
-                            "Best\n" +
-                            "Team Glenmornagie");
+
 
 
             }
@@ -288,21 +301,40 @@ public class MainActivity extends Activity  {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
 
+                new InternetUtil().getSpeed(new AsyncResponse() {
+                    @Override
+                    public double getSpeed(long speed) {
+                        long sp = speed;
+                        Log.d("lvmh","FB speed:"+String.valueOf(sp));
+
+                        if( haveNetworkConnection()) {
+                            if(sp>500) {
+                                sharingImage = true; // true while sharing
+                                callFB(); // function to FB
+                            }
+                            else
+                            {
+                                //No internet connection here
+                                Toast.makeText(getApplicationContext(), "No Internet Connection , Please Try Later or try offline Mail",
+                                        Toast.LENGTH_LONG).show();
+
+                                homeScreen();
+                            }
+                        }
+                        else
+                        {
+                            //No internet connection here
+                            Toast.makeText(getApplicationContext(), "No Internet Connection , Please Try Later or try offline Mail",
+                                    Toast.LENGTH_LONG).show();
+
+                            homeScreen();
+
+                        }
+                        return 0;
+                    }
+                });
 
 
-                if( haveNetworkConnection()) {
-                    sharingImage = true; // true while sharing
-                    callFB(); // function to FB
-                }
-                else
-                {
-                    //No internet connection here
-                    Toast.makeText(getApplicationContext(), "No Internet Connection , Please Try Later or try offline Mail",
-                            Toast.LENGTH_LONG).show();
-
-                    homeScreen();
-
-                }
             }
         });
 

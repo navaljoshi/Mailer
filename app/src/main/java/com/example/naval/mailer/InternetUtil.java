@@ -68,7 +68,7 @@ public class InternetUtil {
             takenTime = endTime - startTime;
             long ss = takenTime / 1000;
             double speed = dataSize / ss;
-            asyncResponse.getSpeed(speed);
+            asyncResponse.getSpeed(takenTime);
         }
     };
 }
