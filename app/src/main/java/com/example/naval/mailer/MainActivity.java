@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -255,6 +256,13 @@ public class MainActivity extends Activity  {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "Gmail Button Clicked , Wait for Gmail Application ",
+                        Toast.LENGTH_LONG).show();
+                Button view = (Button) mailButton;
+                view.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
+                mailButton.invalidate();
+
+
 
                 Log.d("LVMH", "MAIL button clicked ");
 
@@ -266,24 +274,24 @@ public class MainActivity extends Activity  {
                         Log.d("lvmh","GMAIL speed:"+String.valueOf(sp));
 
                         if( haveNetworkConnection()) {
-                            if(sp>500) {
-                                sendEmail();
-                            }else
-                            {
-                                openGmail(MainActivity.this,"mhiarmumbai@gmail.com","You images from Glenmorangie Augmented Reality Experience!","\n It was great having you at the Glenmorangie Augmented Reality experience zone.\n" +
-                                        "Please find you images attached .\n" +
-                                        "\n" +
-                                        "Best\n" +
-                                        "Team Glenmornagie");
-                            }
+
+                            openGmail(MainActivity.this, "mhiarmumbai@gmail.com", "Your images from Glenmorangie Augmented Reality Experience!", "\n It was great having you at the Glenmorangie Augmented Reality experience zone.\n" +
+                                    "Please find you images attached .\n" +
+                                    "\n" +
+                                    "Best\n" +
+                                    "Team Glenmornagie");
+
+
                         }
                         else {
-                            openGmail(MainActivity.this, "mhiarmumbai@gmail.com", "You images from Glenmorangie Augmented Reality Experience!", "\n It was great having you at the Glenmorangie Augmented Reality experience zone.\n" +
+                            openGmail(MainActivity.this, "mhiarmumbai@gmail.com", "Your images from Glenmorangie Augmented Reality Experience!", "\n It was great having you at the Glenmorangie Augmented Reality experience zone.\n" +
                                     "Please find you images attached .\n" +
                                     "\n" +
                                     "Best\n" +
                                     "Team Glenmornagie");
                         }
+
+                        mailButton.getBackground().clearColorFilter();
                         return 0;
                     }
                 });
@@ -299,7 +307,14 @@ public class MainActivity extends Activity  {
 
             @Override
             public void onClick(View v) {
+
                 // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "Facebook Button Clicked , Wait for FB login Page ",
+                        Toast.LENGTH_LONG).show();
+
+                Button view = (Button) fbButton;
+                view.getBackground().setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP);
+                fbButton.invalidate();
 
                 new InternetUtil().getSpeed(new AsyncResponse() {
                     @Override
@@ -307,19 +322,11 @@ public class MainActivity extends Activity  {
                         long sp = speed;
                         Log.d("lvmh","FB speed:"+String.valueOf(sp));
 
-                        if( haveNetworkConnection()) {
-                            if(sp>500) {
+                        if( haveNetworkConnection() && sp>100) {
+
                                 sharingImage = true; // true while sharing
                                 callFB(); // function to FB
-                            }
-                            else
-                            {
-                                //No internet connection here
-                                Toast.makeText(getApplicationContext(), "No Internet Connection , Please Try Later or try offline Mail",
-                                        Toast.LENGTH_LONG).show();
 
-                                homeScreen();
-                            }
                         }
                         else
                         {
@@ -330,6 +337,7 @@ public class MainActivity extends Activity  {
                             homeScreen();
 
                         }
+                        fbButton.getBackground().clearColorFilter();
                         return 0;
                     }
                 });
@@ -469,49 +477,13 @@ public class MainActivity extends Activity  {
         serverSocketThread = new ServerSocketThread();
         serverSocketThread.start();
 
-        /*
-        Log.d("LVMH", "Inside syncServer");
-        final AlertDialog alert;
-        alert = new AlertDialog.Builder(this).create();
 
-
-        // Set an EditText view to get user input
-        alert.setTitle("LVMH Sync Server ");
-        alert.setMessage(" Port:8080 & IP:");
-        //alert.setMessage(" press OK to start the Server ");
-
-
-
-
-
-        alert.setButton(AlertDialog.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-
-                    }
-        });
-
-        alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // here we can have static IP
-            alert.cancel();
-            }
-        });
-
-        alert.show();*/
-
-  /*      new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // this code will be executed after 2 seconds
-                homeScreen();
-            }
-        }, 5000);
-
-        alert.cancel();*/
 
 
     }
+
+
+
 
     public void onShakeImage() {
 

@@ -31,10 +31,9 @@
             android:contentDescription="MainImages"
             android:adjustViewBounds="true"
             android:background="#FFFFFF"
-            android:paddingRight="15px"
             android:paddingLeft="15px"
+            android:paddingRight="15px"
             android:id="@+id/imgHome" />
-
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -123,8 +122,10 @@
                     android:id="@+id/img6"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
+
                     app:civ_border_width="4dp"
                     app:civ_border_color="#FFFFFF"
+
                     android:layout_margin="10dp"/>
 
                 <ImageView
