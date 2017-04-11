@@ -273,23 +273,16 @@ public class MainActivity extends Activity  {
                         long sp = speed;
                         Log.d("lvmh","GMAIL speed:"+String.valueOf(sp));
 
-                        if( haveNetworkConnection()) {
 
-                            openGmail(MainActivity.this, "mhiarmumbai@gmail.com", "Your images from Glenmorangie Augmented Reality Experience!", "\n It was great having you at the Glenmorangie Augmented Reality experience zone.\n" +
-                                    "Please find you images attached .\n" +
+
+                            openGmail(MainActivity.this, "mhiarmumbai@gmail.com", "Glenmorangie Augmented Reality Experience ", "\n" +
+                                    "\nDear User, \n\nThank you for visiting the Glenmorangie Augmented Reality Zone. \n\nPlease find attached the pictures from the experience.\n\n" +
+                                    "We hope you enjoy your favourite single malt from the Glenmorangie Range.\n" +
                                     "\n" +
-                                    "Best\n" +
-                                    "Team Glenmornagie");
+                                    "Thank you!\n" +
+                                            "\n" + "Warm regards,\n" + "\n" +
+                                    "Glenmorangie India");
 
-
-                        }
-                        else {
-                            openGmail(MainActivity.this, "mhiarmumbai@gmail.com", "Your images from Glenmorangie Augmented Reality Experience!", "\n It was great having you at the Glenmorangie Augmented Reality experience zone.\n" +
-                                    "Please find you images attached .\n" +
-                                    "\n" +
-                                    "Best\n" +
-                                    "Team Glenmornagie");
-                        }
 
                         mailButton.getBackground().clearColorFilter();
                         return 0;
@@ -989,6 +982,7 @@ try {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
         emailIntent.setType("text/plain");
         emailIntent.setType("application/image");
+        emailIntent.putExtra(Intent.EXTRA_BCC, new String[] { email });
 
         Uri uri = Uri.parse("file://" + gmailImagePath);
         emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
@@ -1006,11 +1000,8 @@ try {
 
         //activity.startActivity(emailIntent);
         startActivityForResult(emailIntent, 1);
-
-
-
-
-
+        Toast.makeText(getApplicationContext(), "Your Images will be sent in Queue ",
+                Toast.LENGTH_LONG).show();
 
     }
     @Override
@@ -1107,8 +1098,9 @@ try {
                 });
 
 
-                //InetAddress locIP = InetAddress.getByName("192.168.1.88");
+                  //InetAddress locIP = InetAddress.getByName("10.0.2.155");
                  InetAddress locIP = InetAddress.getByName(getIpAddress());
+
                 serverSocket = new ServerSocket(8880, 10, locIP);
 
 
@@ -1169,18 +1161,6 @@ try {
                     Log.d("naval", "Mounted");
                 }
 
-                try {
-                    if(imageCount>=27)// for LVMH we will save only 27 images and then we will replace them
-                        imageCount=0;
-                    fileOutputStream = new FileOutputStream(Environment.getExternalStorageDirectory() + "/lvmh/"+imageCount+"img.jpg");
-
-                }catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-
-                bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-                Log.d("LVMH","Rceiving setting path"+imageCount);
 
 
 
@@ -1199,7 +1179,28 @@ try {
                 } while (bytesRead > -1);
 
 
+                try {
+                    if(imageCount>=27)// for LVMH we will save only 27 images and then we will replace them
+                        imageCount=0;
+
+                    if(current>208394)
+                    {
+
+                    }
+                        else{
+                        fileOutputStream = new FileOutputStream(Environment.getExternalStorageDirectory() + "/lvmh/" + imageCount + "img.jpg");
+                    }
+
+                }catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+
+                bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+                Log.d("LVMH","Rceiving setting path"+imageCount);
                 bufferedOutputStream.write(mybytearray, 0, current);
+
+                Log.d("lvmh","received File length:"+current);
 
                 //resizeImage(imageCount); // resize the image
                 File file1= new File(android.os.Environment.getExternalStorageDirectory(),"lvmh");
@@ -1226,7 +1227,7 @@ try {
                 //serverSocket.close();
 
                // System.out.println("Sever received the file");
-                Log.d("naval","server received file");
+
             }
             catch (IOException e)
             {

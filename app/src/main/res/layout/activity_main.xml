@@ -30,9 +30,9 @@
             android:visibility="visible"
             android:contentDescription="MainImages"
             android:adjustViewBounds="true"
-            android:background="#FFFFFF"
             android:paddingLeft="15px"
             android:paddingRight="15px"
+            android:background="#FFFFFF"
             android:id="@+id/imgHome" />
 
         <LinearLayout
